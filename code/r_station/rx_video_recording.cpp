@@ -153,7 +153,13 @@ void rx_video_recording_start()
    if ( s_iFileVideoRecordingOutput > 0 )
       close(s_iFileVideoRecordingOutput);
 
-   s_iFileVideoRecordingOutput = open(s_szFileRecordingOutput, O_CREAT | O_WRONLY | O_NONBLOCK);
+   #ifdef HW_PLATFORM_STEAMDECK
+      // SteamDeck requires the mode argument when using O_CREAT
+      s_iFileVideoRecordingOutput = open(s_szFileRecordingOutput, O_CREAT | O_WRONLY | O_NONBLOCK, S_IRUSR | S_IWUSR);
+   #else
+      // For other platforms, two arguments are sufficient
+      s_iFileVideoRecordingOutput = open(s_szFileRecordingOutput, O_CREAT | O_WRONLY | O_NONBLOCK);
+   #endif
    if ( -1 == s_iFileVideoRecordingOutput )
    {
       char szFile[128];
