@@ -1822,9 +1822,7 @@ void start_loop()
          popups_add_topmost(p);
       }
 
-      #if defined(HW_PLATFORM_RADXA_ZERO3)
-      FILE* fd = try_open_base_version_file(NULL);
-      #if defined(HW_PLATFORM_STEAMDECK)
+      #if defined(HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK)
       FILE* fd = try_open_base_version_file(NULL);
       if ( NULL == fd )
       {
