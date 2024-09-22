@@ -16,7 +16,7 @@ Code written by: Petru Soroaga, 2021-2023
 #include "local_packets.h"
 #include "radiopackets_short.h"
 
-#if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_RADXA_ZERO3)
+#if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
 #define MAX_RXTX_BLOCKS_BUFFER 100
 #define MAX_TOTAL_PACKETS_IN_BLOCK 64
 #define MAX_DATA_PACKETS_IN_BLOCK 32

@@ -481,6 +481,8 @@ void log_arguments(int argc, char *argv[])
    strcpy(szHWPlatform, "PI");
    #elif defined(HW_PLATFORM_RADXA_ZERO3)
    strcpy(szHWPlatform, "RadxaZero3");
+   #elif defined(HW_PLATFORM_STEAMDECK)
+   strcpy(szHWPlatform, "SteamDeck");
    #endif
    log_line_forced_to_file("Process version: %d.%d (b%d) HW: %s", SYSTEM_SW_VERSION_MAJOR, SYSTEM_SW_VERSION_MINOR/10, SYSTEM_SW_BUILD_NUMBER, szHWPlatform);
    log_line_forced_to_file("Using logger service: %s", (s_logUseService!=0)?"yes":"no");

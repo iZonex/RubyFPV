@@ -641,7 +641,7 @@ int MenuTXInfo::onBack()
 {
    if ( m_bValuesChangedController || m_bValuesChangedController58 )
    {
-      #if defined(HW_PLATFORM_RADXA_ZERO3)
+      #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
       if ( m_bValuesChangedController58 )
          return Menu::onBack();
       #endif

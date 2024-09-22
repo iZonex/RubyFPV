@@ -15,7 +15,7 @@
 #if defined (HW_PLATFORM_RASPBERRY)
 #include "../renderer/render_engine_raw.h"
 #endif
-#if defined (HW_PLATFORM_RADXA_ZERO3)
+#if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
 #include "../renderer/drm_core.h"
 #include "../renderer/render_engine_cairo.h"
 #endif
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
    log_line("Test Render UI (mode %d)", g_iMode);
 
-   #if defined (HW_PLATFORM_RADXA_ZERO3)
+   #if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
    if ( 0 == g_iMode )
       ruby_drm_core_init(0, DRM_FORMAT_ARGB8888, 1920, 1080, 60);
    else if ( 1 == g_iMode )
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 
    render_free_engine();
 
-   #if defined (HW_PLATFORM_RADXA_ZERO3)
+   #if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
    ruby_drm_core_uninit();
    #endif
 

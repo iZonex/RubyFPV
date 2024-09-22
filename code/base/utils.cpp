@@ -927,6 +927,8 @@ bool radio_utils_set_interface_frequency(Model* pModel, int iRadioIndex, int iAs
    log_line("Setting frequency for Pi method");
    #elif defined(HW_PLATFORM_RADXA_ZERO3)
    log_line("Setting frequency for Radxa method");
+   #elif defined(HW_PLATFORM_STEAMDECK)
+   log_line("Setting frequency for SteamDeck method");
    #else
    log_line("Setting frequency for OpenIPC/Radxa method");
    #endif

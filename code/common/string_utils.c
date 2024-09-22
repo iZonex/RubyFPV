@@ -718,6 +718,9 @@ const char* str_get_hardware_board_name_short(u32 board_type)
    #ifdef HW_PLATFORM_RADXA_ZERO3
    static const char* s_szBoardSTypeRadxaZero3 = "Radxa Zero3";
    #endif
+   #ifdef HW_PLATFORM_STEAMDECK
+   static const char* s_szBoardSTypeSteamDeck = "SteamDeck";
+   #endif
 
    static const char* s_szBoardSTypeOpenIPCGoke200 = "Goke200";
    static const char* s_szBoardSTypeOpenIPCGoke210 = "Goke210";
@@ -754,6 +757,10 @@ const char* str_get_hardware_board_name_short(u32 board_type)
    #if defined(HW_PLATFORM_RADXA_ZERO3)
    if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_RADXA_ZERO3 )
       return s_szBoardSTypeRadxaZero3;
+   #endif
+   #if defined(HW_PLATFORM_STEAMDECK)
+   if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_STEAMDECK )
+      return s_szBoardSTypeSteamDeck;
    #endif
 
    if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_OPENIPC_GOKE200 )

@@ -156,6 +156,9 @@ int main(int argc, char *argv[])
                #ifdef HW_PLATFORM_RADXA_ZERO3
                sprintf(szBuff, "ip addr add %d.%d.%d.%d/24 dev eth0", (pCS->uFixedIP >> 24 ) & 0xFF, (pCS->uFixedIP >> 16 ) & 0xFF, (pCS->uFixedIP >> 8 ) & 0xFF, pCS->uFixedIP & 0xFF );
                #endif
+               #ifdef HW_PLATFORM_STEAMDECK
+               sprintf(szBuff, "ip addr add %d.%d.%d.%d/24 dev eth0", (pCS->uFixedIP >> 24 ) & 0xFF, (pCS->uFixedIP >> 16 ) & 0xFF, (pCS->uFixedIP >> 8 ) & 0xFF, pCS->uFixedIP & 0xFF );
+               #endif
                if ( 0 != szBuff[0] )
                   hw_execute_bash_command(szBuff, NULL);
                log_line("Setting a fixed IP done.");

@@ -1046,6 +1046,9 @@ int hardware_radio_load_radio_modules()
    #if defined(HW_PLATFORM_RADXA_ZERO3)
    log_line("[HardwareRadio] Adding radio modules on Radxa for detected radio cards...");
    #endif
+   #if defined(HW_PLATFORM_STEAMDECK)
+   log_line("[HardwareRadio] Adding radio modules on SteamDeck for detected radio cards...");
+   #endif
 
 
    char szOutput[1024];
@@ -1070,6 +1073,11 @@ int hardware_radio_load_radio_modules()
       hw_execute_bash_command("sudo modprobe -f 88XXau_wfb", szOutput);
       #endif
 
+      #if defined(HW_PLATFORM_STEAMDECK)
+      hw_execute_bash_command("sudo modprobe -f 88XXau_wfb", szOutput);
+      #endif
+
+
       if ( (0 != szOutput[0]) && (strlen(szOutput) > 10) )
          log_softerror_and_alarm("[HardwareRadio] Error on loading driver: [%s]", szOutput);
       else
@@ -1090,6 +1098,11 @@ int hardware_radio_load_radio_modules()
       #if defined(HW_PLATFORM_RADXA_ZERO3)
       hw_execute_bash_command("sudo modprobe cfg80211", NULL);
       hw_execute_bash_command("sudo insmod /lib/modules/$(uname -r)/kernel/drivers/net/wireless/8812eu_radxa.ko rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0 2>&1 1>/dev/null", szOutput);
+      #endif
+
+      #if defined(HW_PLATFORM_STEAMDECK)
+      hw_execute_bash_command("sudo modprobe cfg80211", NULL);
+      hw_execute_bash_command("sudo insmod /lib/modules/$(uname -r)/kernel/drivers/net/wireless/8812eu_steamdeck.ko rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0 2>&1 1>/dev/null", szOutput);
       #endif
 
       #if defined(HW_PLATFORM_OPENIPC_CAMERA)

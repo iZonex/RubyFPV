@@ -49,7 +49,7 @@
 #include "../radio/radioflags.h"
 #include "../base/ruby_ipc.h"
 
-#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
 #include "../base/ctrl_settings.h"
 #include "../base/controller_utils.h"
 #endif
@@ -217,6 +217,9 @@ void detectSystemType()
    #ifdef HW_PLATFORM_RADXA_ZERO3
    fd = fopen("/config/ruby_systype.txt", "w");
    #endif
+   #ifdef HW_PLATFORM_STEAMDECK
+   fd = fopen("/config/ruby_systype.txt", "w");
+   #endif
    
    if ( NULL != fd )
    {
@@ -235,7 +238,7 @@ void _check_files()
    szFilesMissing[0] = 0;
    bool failed = false;
 
-   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
    if( access( "ruby_controller", R_OK ) == -1 )
       { failed = true; strcat(szFilesMissing, " ruby_controller"); }
    if( access( "ruby_rt_station", R_OK ) == -1 )
@@ -288,7 +291,7 @@ void _check_files()
 
 bool _check_for_update_from_boot()
 {
-   #if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_RADXA_ZERO3)
+   #if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
    char szComm[2048];
    char szFoundFile[1024];
    char szZipFile[1024];
@@ -499,6 +502,8 @@ void _log_platform(bool bNewLine)
    printf("Built for Raspberry");
    #elif defined(HW_PLATFORM_RADXA_ZERO3)
    printf("Built for Radxa Zero3");
+   #elif defined(HW_PLATFORM_STEAMDECK)
+   printf("Built for SteamDeck");
    #else
    printf("Built for N/A");
    #endif
@@ -607,6 +612,11 @@ int main(int argc, char *argv[])
    hw_execute_bash_command_silent(szComm, NULL);
    #endif
 
+   #if defined (HW_PLATFORM_STEAMDECK)
+   sprintf(szComm, "echo 'Ruby execute for SteamDeck platform' >> /tmp/ruby_boot.log");
+   hw_execute_bash_command_silent(szComm, NULL);
+   #endif
+
    #if defined(HW_PLATFORM_OPENIPC_CAMERA)
    sprintf(szComm, "echo 'Ruby execute for OpenIPC platform' >> /tmp/ruby_boot.log");
    hw_execute_bash_command_silent(szComm, NULL);
@@ -652,6 +662,12 @@ int main(int argc, char *argv[])
    #if defined (HW_PLATFORM_RADXA_ZERO3)
    system("sudo mount -o remount,rw /");
    system("cd /home/radxa/ruby");
+   hardware_sleep_ms(50);
+   #endif
+
+   #if defined (HW_PLATFORM_STEAMDECK)
+   system("sudo mount -o remount,rw /");
+   system("cd /home/deck/ruby");
    hardware_sleep_ms(50);
    #endif
 
@@ -718,6 +734,14 @@ int main(int argc, char *argv[])
       system("sudo mount -o remount,rw /config");
       system("cd /config; sudo mount -o remount,rw /config; cd /home/radxa/ruby");
       system("cd /home/radxa/ruby");
+      hardware_sleep_ms(100);
+      #endif
+
+      #if defined(HW_PLATFORM_STEAMDECK)
+      system("sudo mount -o remount,rw /");
+      system("sudo mount -o remount,rw /config");
+      system("cd /config; sudo mount -o remount,rw /config; cd /home/deck/ruby");
+      system("cd /home/deck/ruby");
       hardware_sleep_ms(100);
       #endif
 
@@ -838,7 +862,7 @@ int main(int argc, char *argv[])
 
    log_line("Files are ok, checking processes and init log files...");
 
-   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
    _check_files();
    #endif
 
@@ -860,6 +884,10 @@ int main(int argc, char *argv[])
       do_first_boot_pre_initialization();
 
    #ifdef HW_PLATFORM_RADXA_ZERO3
+   hw_execute_bash_command("ip link set wlx down 2>&1 1>/dev/null", NULL);
+   #endif
+
+   #ifdef HW_PLATFORM_STEAMDECK
    hw_execute_bash_command("ip link set wlx down 2>&1 1>/dev/null", NULL);
    #endif
 
@@ -1147,6 +1175,9 @@ int main(int argc, char *argv[])
 #ifdef HW_PLATFORM_RADXA_ZERO3
    log_line("Running on Radxa Zero 3 hardware");
 #endif
+#ifdef HW_PLATFORM_STEAMDECK
+   log_line("Running on Steam Deck hardware");
+#endif
 #ifdef HW_PLATFORM_OPENIPC_CAMERA
    log_line("Running on OpenIPC hardware");
 #endif
@@ -1217,7 +1248,7 @@ int main(int argc, char *argv[])
    hw_execute_ruby_process_wait(NULL, "ruby_tx_telemetry", "-ver", szOutput, 1);
    log_line("ruby_tx_telemetry: [%s]", szOutput);
 
-   #if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_RADXA_ZERO3)
+   #if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
    hw_execute_ruby_process_wait(NULL, "ruby_rt_station", "-ver", szOutput, 1);
    log_line("ruby_rt_station: [%s]", szOutput);
    hw_execute_ruby_process_wait(NULL, "ruby_rx_telemetry", "-ver", szOutput, 1);
@@ -1231,7 +1262,7 @@ int main(int argc, char *argv[])
 
    _check_for_update_from_boot();
 
-   #if defined(HW_PLATFORM_RADXA_ZERO3)
+   #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
    //hw_stop_process("wpa_supplicant");
    #endif
 
@@ -1339,6 +1370,10 @@ int main(int argc, char *argv[])
       #ifdef HW_PLATFORM_RADXA_ZERO3
       hw_execute_bash_command("cp -rf /home/radxa/ruby/logs/log_start.txt /home/radxa/ruby/logs/log_firstboot_start.txt", NULL);
       hw_execute_bash_command("cp -rf /home/radxa/ruby/logs/log_system.txt /home/radxa/ruby/logs/log_firstboot.txt", NULL);
+      #endif
+      #ifdef HW_PLATFORM_STEAMDECK
+      hw_execute_bash_command("cp -rf /home/steam/ruby/logs/log_start.txt /home/steam/ruby/logs/log_firstboot_start.txt", NULL);
+      hw_execute_bash_command("cp -rf /home/steam/ruby/logs/log_system.txt /home/steam/ruby/logs/log_firstboot.txt", NULL);
       #endif
       #ifdef HW_PLATFORM_OPENIPC_CAMERA
       hw_execute_bash_command("cp -rf /tmp/logs/log_start.txt /root/ruby/log_firstboot_start.txt", NULL);
@@ -1465,7 +1500,7 @@ int main(int argc, char *argv[])
    }
    else
    {
-      #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+      #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
 
       u32 uControllerId = controller_utils_getControllerId();
       log_line("Controller UID: %u", uControllerId);
@@ -1550,7 +1585,7 @@ int main(int argc, char *argv[])
       log_line("Starting controller...");
       fflush(stdout);
 
-      #ifdef HW_PLATFORM_RADXA_ZERO3
+      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
       hw_execute_ruby_process(NULL, "ruby_alive", NULL, NULL);
       #endif
    
@@ -1600,7 +1635,7 @@ int main(int argc, char *argv[])
       log_line("Copy boot log to /boot partition. Done.");
       #endif
 
-      #ifdef HW_PLATFORM_RADXA_ZERO3
+      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
       hw_execute_bash_command("rm -rf /config/last_ruby_boot.txt", NULL);
       hw_execute_bash_command("cp -rf logs/log_system.txt /config/last_ruby_boot.txt", NULL);
       log_line("Copy boot log to /config partition. Done.");
@@ -1676,7 +1711,7 @@ int main(int argc, char *argv[])
       log_line("Copy boot log to /boot partition. Done.");
       #endif
 
-      #ifdef HW_PLATFORM_RADXA_ZERO3
+      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
       hw_execute_bash_command("rm -rf /config/last_ruby_boot.txt", NULL);
       hw_execute_bash_command("cp -rf logs/log_system.txt /config/last_ruby_boot.txt", NULL);      
       log_line("Copy boot log to /config partition. Done.");

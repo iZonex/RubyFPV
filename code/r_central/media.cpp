@@ -245,6 +245,13 @@ bool media_take_screenshot(bool bIncludeOSD)
    popups_add_topmost(p);
    return false;
    #endif
+   #ifdef HW_PLATFORM_STREAMDECK
+   log_line("Media Storage: Ttry to take screenshot to file: %s", szFile);
+
+   p = new Popup("Screenshot capability not available on StreamDeck", 0.1,0.72, 2);
+   popups_add_topmost(p);
+   return false;
+   #endif
 
    ruby_signal_alive();
    hw_launch_process2("./raspi2png", "-p", szFile);

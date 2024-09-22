@@ -179,6 +179,15 @@ void MenuSystem::onReturnFromChild(int iChildMenuId, int returnValue)
       hw_execute_bash_command("touch /home/radxa/ruby/config/firstboot.txt", NULL);
       #endif
 
+      #if defined(HW_PLATFORM_STREAMDECK)
+      hw_execute_bash_command("rm -rf /home/deck/ruby/logs", NULL);
+      hw_execute_bash_command("rm -rf /home/deck/ruby/media", NULL);
+      hw_execute_bash_command("rm -rf /home/deck/ruby/config", NULL);
+      hw_execute_bash_command("rm -rf /home/deck/ruby/tmp", NULL);
+      hw_execute_bash_command("mkdir -p config", NULL);
+      hw_execute_bash_command("touch /home/deck/ruby/config/firstboot.txt", NULL);
+      #endif
+
       char szBuff[128];
       sprintf(szBuff, "touch %s%s", FOLDER_CONFIG, LOG_USE_PROCESS);
       hw_execute_bash_command(szBuff, NULL);

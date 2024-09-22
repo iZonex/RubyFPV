@@ -323,6 +323,9 @@ static void * _thread_adjust_affinities(void *argument)
       #if defined(HW_PLATFORM_RADXA_ZERO3)
       hw_set_proc_affinity("ruby_player_radxa", 3, s_iCPUCoresCount);
       #endif
+      #if defined(HW_PLATFORM_STEAMDECK)
+      hw_set_proc_affinity("ruby_player_steamdeck", 3, s_iCPUCoresCount);
+      #endif
    }
    else
    {

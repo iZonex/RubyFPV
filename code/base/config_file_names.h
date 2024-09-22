@@ -81,6 +81,7 @@
 
 #define SUBFOLDER_UPDATES_PI    "bin/pi/"
 #define SUBFOLDER_UPDATES_RADXA "bin/radxaz3/"
+#define SUBFOLDER_UPDATES_STEAMDECK "bin/steamdeck/"
 #define SUBFOLDER_UPDATES_OIPC  "bin/ssc338q/"
 
 //-------------------------------------------
@@ -155,6 +156,37 @@
 #define VIDEO_PLAYER_OFFLINE "ruby_player_radxa"
 
 #endif
+
+// --------------------------------------------------------------------------------
+
+#if defined(HW_PLATFORM_STEAMDECK)
+
+#define FOLDER_BINARIES "/home/deck/ruby/"
+#define FOLDER_CONFIG "/home/deck/ruby/config/"
+#define FOLDER_CONFIG_MODELS "/home/deck/ruby/config/models/"
+#define FOLDER_VEHICLE_HISTORY "/home/deck/ruby/config/models/history-%d/"
+#define FOLDER_LOGS "/home/deck/ruby/logs/"
+#define FOLDER_MEDIA "/home/deck/ruby/media/"
+#define FOLDER_MEDIA_VEHICLE_DATA "/home/deck/ruby/media/vehicle-%u/"
+#define FOLDER_OSD_PLUGINS "/home/deck/ruby/plugins/osd/"
+#define FOLDER_CORE_PLUGINS "/home/deck/ruby/plugins/core/"
+#define FOLDER_UPDATES "/home/deck/ruby/updates/"
+#define FOLDER_RUBY_TEMP "/home/deck/ruby/tmp/"
+#define FOLDER_USB_MOUNT "/home/deck/ruby/tmp/tmpusbfiles/"
+#define FOLDER_TEMP_VIDEO_MEM "/home/deck/ruby/tmp/memdisk/"
+#define FOLDER_WINDOWS_PARTITION "/config/"
+
+#define FILE_FORCE_VEHICLE "/boot/forcevehicle"
+#define FILE_FORCE_VEHICLE_NO_CAMERA "/boot/force_no_camera"
+#define FILE_FORCE_ROUTER "/boot/forcerouter"
+#define FILE_FORCE_RESET "/boot/forcereset"
+
+#define VIDEO_PLAYER_PIPE "ruby_player_radxa"
+#define VIDEO_PLAYER_UDP "ruby_player_radxa"
+#define VIDEO_PLAYER_OFFLINE "ruby_player_radxa"
+
+#endif
+
 
 // -------------------------------------------------------------------------------
 

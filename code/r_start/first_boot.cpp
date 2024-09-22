@@ -92,6 +92,52 @@ void do_first_boot_pre_initialization()
 
    #endif
 
+   #if defined HW_PLATFORM_STEAMDECK
+
+   printf("\nRuby doing first time ever initialization on Steam Deck. Please wait...\n");
+   fflush(stdout);
+   hw_execute_bash_command_raw("echo 'performance' | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor", NULL);
+
+   hw_execute_bash_command_silent("mkdir -p /tmp/ruby/", NULL);
+   log_init_local_only("RubyStartFirst");
+   //log_enable_stdout();
+   log_add_file("/tmp/ruby/log_first_steamdeck.log");
+   hw_execute_bash_command("echo \"\nRuby doing first time ever initialization on Steam Deck...\n\" > /tmp/ruby/log_first_steamdeck.log", NULL);
+   if ( access("/home/88XXau_wfb.ko", R_OK) != -1 )
+   {
+      hw_execute_bash_command("cp -rf /home/88XXau_wfb.ko /lib/modules/$(uname -r)/kernel/drivers/net/wireless/", NULL);
+      hw_execute_bash_command("rmmod 88XXau_wfb 2>&1 1>/dev/null", NULL);
+      hw_execute_bash_command("insmod /lib/modules/$(uname -r)/kernel/drivers/net/wireless/88XXau_wfb.ko", NULL);
+   }
+   if ( access("/home/8812eu_steamdeck.ko", R_OK) != -1 )
+   {
+      hw_execute_bash_command("cp -rf /home/8812eu_steamdeck.ko /lib/modules/$(uname -r)/kernel/drivers/net/wireless/", NULL);
+      //SteamDeck EU driver will be loaded by hardware_radio_load_radio_modules()
+      //hw_execute_bash_command("sudo modprobe cfg80211", NULL);
+      //hw_execute_bash_command("insmod /lib/modules/$(uname -r)/kernel/drivers/net/wireless/8812eu_steamdeck.ko rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0", NULL);
+   }
+   hw_execute_bash_command("depmod -a", NULL);
+   hw_execute_bash_command("lsusb", NULL);
+   hw_execute_bash_command("sudo modprobe -f 88XXau_wfb", NULL);
+   hw_execute_bash_command("sudo modprobe -f 8812eu_steamdeck.ko", NULL);
+   hw_execute_bash_command("sudo modprobe -r aic8800_fdrv 2>&1 1>/dev/null", NULL);
+   hw_execute_bash_command("sudo modprobe -r aic8800_bsp 2>&1 1>/dev/null", NULL);
+   hw_execute_bash_command("lsusb", NULL);
+   hw_execute_bash_command("lsmod", NULL);
+   hw_execute_bash_command("ip link", NULL);
+
+   char szComm[256];
+   sprintf(szComm, "mkdir -p %s", FOLDER_CONFIG);
+   hw_execute_bash_command(szComm, NULL);
+
+   hw_execute_bash_command("sync", NULL);
+   
+   printf("\nRuby done doing first time ever initialization on Steam Deck.\n");
+   fflush(stdout);
+   hw_execute_bash_command("echo \"\nRuby done doing first time ever initialization on Steam Deck.\n\" > /tmp/ruby/log_first_steamdeck.log", NULL);
+
+   #endif
+
    #if defined (HW_PLATFORM_OPENIPC_CAMERA)
 
    hw_execute_bash_command("fw_setenv sensor", NULL); 
@@ -145,6 +191,16 @@ void do_first_boot_initialization_radxa(bool bIsVehicle, u32 uBoardType)
    hw_execute_bash_command("PATH=\"/usr/sbin:/usr/local/sbin:$PATH\"", NULL);
 }
 
+void do_first_boot_initialization_steamdeck(bool bIsVehicle, u32 uBoardType)
+{
+   log_line("Doing first time boot setup for Steam Deck platform...");
+
+   hw_execute_bash_command("sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0", NULL);
+   hw_execute_bash_command("sudo sysctl -w net.ipv6.conf.default.disable_ipv6=0", NULL);
+   hw_execute_bash_command("sudo sysctl -p", NULL);
+   hw_execute_bash_command("PATH=\"/usr/sbin:/usr/local/sbin:$PATH\"", NULL);
+}
+
 
 void do_first_boot_initialization_openipc(bool bIsVehicle, u32 uBoardType)
 {
@@ -163,6 +219,9 @@ void do_first_boot_initialization(bool bIsVehicle, u32 uBoardType)
    #endif
    #ifdef HW_PLATFORM_RADXA_ZERO3
    do_first_boot_initialization_radxa(bIsVehicle, uBoardType);
+   #endif
+   #ifdef HW_PLATFORM_STEAMDECK
+   do_first_boot_initialization_steamdeck(bIsVehicle, uBoardType);
    #endif
    #ifdef HW_PLATFORM_OPENIPC_CAMERA
    do_first_boot_initialization_openipc(bIsVehicle, uBoardType);
@@ -252,7 +311,7 @@ void do_first_boot_initialization(bool bIsVehicle, u32 uBoardType)
       }
       #endif
 
-      #if defined (HW_PLATFORM_RADXA_ZERO3)
+      #if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
       if ( NULL != pcs )
          pcs->iFreqARM = hardware_get_cpu_speed();
       #endif

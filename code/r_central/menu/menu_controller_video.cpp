@@ -246,6 +246,13 @@ void MenuControllerVideo::onReturnFromChild(int iChildMenuId, int returnValue)
       return;
    }
    #endif
+   #if defined (HW_PLATFORM_STEAMDECK)
+   if ( 2 == iChildMenuId/1000 )
+   {
+      ruby_mark_reinit_hdmi_display();
+      return;
+   }
+   #endif
    valuesToUI();
 }
 
@@ -253,6 +260,16 @@ void MenuControllerVideo::onReturnFromChild(int iChildMenuId, int returnValue)
 int MenuControllerVideo::onBack()
 {
    #if defined (HW_PLATFORM_RADXA_ZERO3)
+   if ( m_hdmigroupOrg != hdmi_get_current_resolution_group() ||
+        m_hdmimodeOrg != hdmi_get_current_resolution_mode() )
+   {
+      MenuConfirmation* pMC = new MenuConfirmation("Changing HDMI resolution","Your display will flicker or go black for few seconds while the HDMI mode is changed.", 2, true);
+      pMC->m_yPos = 0.3;
+      add_menu_to_stack(pMC);
+      return 1;
+   }
+   #endif
+   #if defined (HW_PLATFORM_STEAMDECK)
    if ( m_hdmigroupOrg != hdmi_get_current_resolution_group() ||
         m_hdmimodeOrg != hdmi_get_current_resolution_mode() )
    {

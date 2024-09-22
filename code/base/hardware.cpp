@@ -503,6 +503,10 @@ u32 hardware_getOnlyBoardType()
    s_uHardwareBoardType = BOARD_TYPE_RADXA_ZERO3;
    #endif
 
+   #ifdef HW_PLATFORM_STEAMDECK
+   s_uHardwareBoardType = BOARD_TYPE_STEAMDECK;
+   #endif
+
    #ifdef HW_PLATFORM_OPENIPC_CAMERA
    char szBuff[256];
 
@@ -1687,6 +1691,10 @@ void hardware_mount_root()
    #if defined(HW_PLATFORM_RADXA_ZERO3)
    hw_execute_bash_command("sudo mount -o remount,rw /", NULL);
    #endif
+
+   #if defined(HW_PLATFROM_STEAMDECK)
+   hw_execute_bash_command("sudo mount -o remount,rw /", NULL);
+   #endif
 }
 
 void hardware_mount_boot()
@@ -1705,6 +1713,9 @@ int hardware_get_free_space_kb()
       return -1;
    #elif defined( HW_PLATFORM_RADXA_ZERO3)
    if ( 1 != hw_execute_bash_command_raw("df / | grep dev/", szOutput) )
+      return -1;
+   #elif defined(HW_PLATFORM_STEAMDECK)
+   if ( 1 != hw_execute_bash_command_raw("df . | grep root", szOutput) )
       return -1;
    #else
    szOutput[0] = 0;
@@ -1734,6 +1745,12 @@ int hardware_has_eth()
 
    #if defined(HW_PLATFORM_RADXA_ZERO3)
    hw_execute_bash_command_raw("ip link | grep enx 2>&1", szOutput);
+   if ( 0 == szOutput[0] || NULL != strstr(szOutput, "not found") )
+      hw_execute_bash_command_raw("ip link | grep eth0 2>&1", szOutput);
+   #endif
+
+   #if defined(HW_PLATFORM_STEAMDECK)
+   hw_execute_bash_command_raw("ip link | grep enp 2>&1", szOutput);
    if ( 0 == szOutput[0] || NULL != strstr(szOutput, "not found") )
       hw_execute_bash_command_raw("ip link | grep eth0 2>&1", szOutput);
    #endif
@@ -1789,6 +1806,12 @@ int hardware_get_cpu_speed()
    #endif
 
    #if defined(HW_PLATFORM_RADXA_ZERO3)
+   char szOutput[1024];
+   hw_execute_bash_command_raw_silent("cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq 2>/dev/null", szOutput);
+   return atoi(szOutput)/1000;
+   #endif
+
+   #if defined(HW_PLATFORM_STEAMDECK)
    char szOutput[1024];
    hw_execute_bash_command_raw_silent("cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq 2>/dev/null", szOutput);
    return atoi(szOutput)/1000;
@@ -1852,6 +1875,10 @@ int hardware_get_gpu_speed()
    }
    return atoi(p);
    #elif defined(HW_PLATFORM_RADXA_ZERO3)
+   char szOutput[1024];
+   hw_execute_bash_command_raw_silent("cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq 2>/dev/null", szOutput);
+   return atoi(szOutput)/1000;
+   #elif defined(HW_PLATFORM_STEAMDECK)
    char szOutput[1024];
    hw_execute_bash_command_raw_silent("cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq 2>/dev/null", szOutput);
    return atoi(szOutput)/1000;

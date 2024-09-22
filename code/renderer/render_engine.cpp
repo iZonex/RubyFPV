@@ -42,6 +42,10 @@
 #include "render_engine_cairo.h"
 #endif
 
+#if defined (HW_PLATFORM_STEAMDECK)
+#include "render_engine_cairo.h"
+#endif
+
 #include "../base/base.h"
 #include "../base/hardware.h"
 
@@ -58,6 +62,10 @@ RenderEngine* render_init_engine()
       s_pRenderEngine = new RenderEngineRaw();
       #endif
       #if defined (HW_PLATFORM_RADXA_ZERO3)
+      s_bRenderEngineSupportsRawFonts = true;
+      s_pRenderEngine = new RenderEngineCairo();
+      #endif
+      #if defined (HW_PLATFORM_STEAMDECK)
       s_bRenderEngineSupportsRawFonts = true;
       s_pRenderEngine = new RenderEngineCairo();
       #endif

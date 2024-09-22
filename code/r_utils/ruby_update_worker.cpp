@@ -241,6 +241,9 @@ int _copy_binary_files(char* szInputUpdateFolder)
    #ifdef HW_PLATFORM_RADXA_ZERO3
    strcat(szSrcBinariesFolder, SUBFOLDER_UPDATES_RADXA);
    #endif
+   #ifdef HW_PLATFORM_STEAMDECK
+   strcat(szSrcBinariesFolder, SUBFOLDER_UPDATES_STEAMDECK);
+   #endif
    #ifdef HW_PLATFORM_OPENIPC_CAMERA
    strcat(szSrcBinariesFolder, SUBFOLDER_UPDATES_OIPC);
    #endif
@@ -370,6 +373,10 @@ int _copy_update_drivers(char* szInputUpdateFolder)
    strcat(szDriver, SUBFOLDER_UPDATES_RADXA);
    strcat(szDriver, "drivers/8812eu_radxa.ko");
    #endif
+   #ifdef HW_PLATFORM_STEAMDECK
+   strcat(szDriver, SUBFOLDER_UPDATES_STEAMDECK);
+   strcat(szDriver, "drivers/8812eu_steamdeck.ko");
+   #endif
    #ifdef HW_PLATFORM_OPENIPC_CAMERA
    strcat(szDriver, SUBFOLDER_UPDATES_OIPC);
    strcat(szDriver, "drivers/8812eu.ko");
@@ -387,6 +394,16 @@ int _copy_update_drivers(char* szInputUpdateFolder)
       hw_execute_bash_command(szComm, NULL);
       hw_execute_bash_command("insmod /lib/modules/$(uname -r)/kernel/drivers/net/wireless/8812eu_radxa.ko rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0 2>&1 1>/dev/null", NULL);
       #endif
+      #ifdef HW_PLATFORM_STEAMDECK
+      char szComm[256];
+      hw_execute_bash_command("sudo modprobe cfg80211", NULL);
+      snprintf(szComm, sizeof(szComm)/sizeof(szComm[0]), "cp -rf %s /home/", szDriver);
+      hw_execute_bash_command(szComm, NULL);
+      snprintf(szComm, sizeof(szComm)/sizeof(szComm[0]), "cp -rf %s /lib/modules/$(uname -r)/kernel/drivers/net/wireless/", szDriver);
+      hw_execute_bash_command(szComm, NULL);
+      hw_execute_bash_command("insmod /lib/modules/$(uname -r)/kernel/drivers/net/wireless/8812eu_steamdeck.ko rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0 2>&1 1>/dev/null", NULL);
+      #endif
+
    }
    else
       log_line("No driver file found (%d)", szDriver);
@@ -412,6 +429,10 @@ int _copy_plugin_files(char* szInputUpdateFolder)
    #endif
    #ifdef HW_PLATFORM_RADXA_ZERO3
    strcat(szSrcPluginsFolder, SUBFOLDER_UPDATES_RADXA);
+   strcat(szSrcPluginsFolder, "plugins/");
+   #endif
+   #ifdef HW_PLATFORM_STEAMDECK
+   strcat(szSrcPluginsFolder, SUBFOLDER_UPDATES_STEAMDECK);
    strcat(szSrcPluginsFolder, "plugins/");
    #endif
    #ifdef HW_PLATFORM_OPENIPC_CAMERA

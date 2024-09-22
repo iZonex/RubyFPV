@@ -98,6 +98,9 @@ void MenuStorage::onShow()
    #ifdef HW_PLATFORM_RADXA_ZERO3
    sprintf(szComm, "df -m %s | grep mmc", FOLDER_BINARIES);
    #endif
+   #ifdef HW_PLATFORM_STEAMDECK
+   sprintf(szComm, "df -m %s | grep root", FOLDER_BINARIES);
+   #endif
 
    if ( 1 == hw_execute_bash_command_raw(szComm, szBuff) )
    {
@@ -980,6 +983,11 @@ void MenuStorage::playVideoFile(int iMenuItemIndex)
    #ifdef HW_PLATFORM_RADXA_ZERO3
    snprintf(szBuff, sizeof(szBuff)/sizeof(szBuff[0]), "./%s -f %s%s &", VIDEO_PLAYER_OFFLINE, FOLDER_MEDIA, szFile);
    #endif
+
+   #ifdef HW_PLATFORM_STEAMDECK
+   snprintf(szBuff, sizeof(szBuff)/sizeof(szBuff[0]), "./%s -f %s%s &", VIDEO_PLAYER_OFFLINE, FOLDER_MEDIA, szFile);
+   #endif
+   
    hw_execute_bash_command(szBuff,NULL);
    hardware_sleep_ms(100);
    g_bVideoPlaying = true;

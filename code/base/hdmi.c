@@ -10,6 +10,11 @@
 #include <xf86drmMode.h>
 #include <drm_fourcc.h> 
 #endif
+#if defined(HW_PLATFORM_STEAMDECK)
+#include <xf86drm.h>
+#include <xf86drmMode.h>
+#include <drm_fourcc.h>
+#endif
 
 #define MAX_HDMI_RESOLUTIONS 30
 #define MAX_RESOLUTION_REFRESH_RATES_COUNT 10
@@ -212,6 +217,92 @@ int _hdmi_detect_current_mode()
    close(fdDRM);
    return -1;
    #endif
+
+   #if defined (HW_PLATFORM_STEAMDECK)
+
+   // Mode[0] is always the current display mode
+   s_nHDMI_CurrentResolutionIndex = 0;
+   s_nHDMI_CurrentResolutionRefreshIndex = 0;
+
+   int fdDRM = -1;
+
+   fdDRM = open("/dev/dri/card0", O_RDWR | O_NONBLOCK);
+   if ( fdDRM < 0 )
+   {
+      log_softerror_and_alarm("[HDMI] Failed to open graphics device.");
+      return -1;
+   }
+
+   drmModeRes* pAllDRMResources = drmModeGetResources(fdDRM);
+   if ( !pAllDRMResources )
+   {
+      log_softerror_and_alarm("[HDMI] Cannot retrieve DRM resources (%d)", errno);
+      return -errno;
+   }
+ 
+   if ( pAllDRMResources->count_connectors <= 0 )
+   {
+      log_softerror_and_alarm("[HDMI] No connectors available (%d)", errno);
+      return -1;
+   }
+ 
+   log_line("[HDMI] Finding resources (%d connectors, %d crtcs)...",
+      pAllDRMResources->count_connectors, pAllDRMResources->count_crtcs);
+
+   // Find connectors (displays, aka video hardware connectors (HDMI,DVI...))
+
+   drmModeConnector* pConnector = NULL;
+
+   for (int i = 0; i < pAllDRMResources->count_connectors; i++)
+   {
+      pConnector = drmModeGetConnector(fdDRM, pAllDRMResources->connectors[i]);
+      if (!pConnector)
+      {
+         log_softerror_and_alarm("[HDMI] Cannot retrieve DRM connector %u:%u (%d)",
+              i, pAllDRMResources->connectors[i], errno);
+         continue;
+      }
+
+      if ( pConnector->count_modes <= 0 )
+      {
+         drmModeFreeConnector(pConnector);
+         pConnector = NULL;
+         continue;
+      }
+      if ( pConnector->connection != DRM_MODE_CONNECTED )
+      {
+         drmModeFreeConnector(pConnector);
+         pConnector = NULL;
+         continue;
+      }
+      break;
+   }
+
+   if ( NULL == pConnector )
+   {
+      log_softerror_and_alarm("[HDMI] Can't find any usable and connected connector.");
+      drmModeFreeResources(pAllDRMResources);
+      return -1;
+   }
+
+   // Iterate supported modes for each display (connector)
+   for (int j = 0; j < pConnector->count_modes; j++)
+   {
+      drmModeModeInfo *mode = &pConnector->modes[j];
+
+      log_line("[HDMI] Connector mode %d:  %dx%d%s@%d",
+         j, mode->hdisplay, mode->vdisplay,
+         mode->flags & DRM_MODE_FLAG_INTERLACE ? "i" : "",
+         mode->vrefresh);
+
+      _hdmi_add_resolution(1, s_nHDMI_ResolutionCount+1, mode->hdisplay, mode->vdisplay, mode->vrefresh, HDMI_ASPECT_MODE_16_9);
+   }
+
+   drmModeFreeConnector(pConnector);
+   drmModeFreeResources(pAllDRMResources);
+   close(fdDRM);
+   return -1;
+   #endif
 }
 
 void hdmi_enum_modes()
@@ -247,6 +338,10 @@ void hdmi_enum_modes()
    #endif
 
    #if defined (HW_PLATFORM_RADXA_ZERO3)
+   _hdmi_detect_current_mode();
+   #endif
+
+   #if defined (HW_PLATFORM_STEAMDECK)
    _hdmi_detect_current_mode();
    #endif
 }
@@ -440,6 +535,21 @@ int hdmi_set_current_resolution(int width, int height, int refresh)
    #endif
 
    #if defined (HW_PLATFORM_RADXA_ZERO3)
+   char szFile[MAX_FILE_PATH_SIZE];
+   strcpy(szFile, FOLDER_CONFIG);
+   strcat(szFile, "hdmi_mode.cfg");
+   FILE* fd = fopen(szFile, "w");
+   if ( NULL == fd )
+   {
+      log_softerror_and_alarm("[HDMI] Can't open file to write user set HDMI mode.");
+      return -1;
+   }
+
+   fprintf(fd, "%d %d %d\n", width, height, refresh);
+   fclose(fd);
+   log_line("[HDMI] Stored used selected HDMI mode.");
+   #endif
+   #if defined (HW_PLATFORM_STEAMDECK)
    char szFile[MAX_FILE_PATH_SIZE];
    strcpy(szFile, FOLDER_CONFIG);
    strcat(szFile, "hdmi_mode.cfg");
