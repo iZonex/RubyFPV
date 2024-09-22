@@ -59,7 +59,7 @@
 #include <pthread.h>
 #include <sys/ioctl.h>
 
-#ifndef HW_PLATFORM_STEAMDECK
+#ifndef HW_PLATFORM_RADXA_ZERO3 || RUBY_BUILD_HW_PLATFORM_PI
 #error "ONLY FOR STEAMDECK PLATFORM!"
 #endif
 
