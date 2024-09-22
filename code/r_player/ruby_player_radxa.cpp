@@ -59,7 +59,7 @@
 #include <pthread.h>
 #include <sys/ioctl.h>
 
-#ifndef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+#ifndef HW_PLATFORM_RADXA_ZERO3
 #error "ONLY FOR RADXA PLATFORM!"
 #endif
 
