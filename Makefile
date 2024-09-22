@@ -290,8 +290,8 @@ ruby_plugin_gauge_heading: $(FOLDER_PLUGINS_OSD)/ruby_plugin_gauge_heading.o osd
 ruby_player_radxa:code/r_player/ruby_player_radxa.o code/r_player/mpp_core.o $(FOLDER_BASE)/hdmi.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
 	$(CXX) $(_CFLAGS) $(CFLAGS_RENDERER) -o $@ $^ $(_LDFLAGS) $(LDFLAGS_RENDERER) $(LDFLAGS_CENTRAL) $(LDFLAGS_CENTRAL2) -ldl -lc -lrockchip_mpp
 
-ruby_player_steamdeck:code/r_player/ruby_player_steamdeck.o code/r_player/mpp_core.o $(FOLDER_BASE)/hdmi.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
-	$(CXX) $(_CFLAGS) $(CFLAGS_RENDERER) -o $@ $^ $(_LDFLAGS) $(LDFLAGS_RENDERER) $(LDFLAGS_CENTRAL) $(LDFLAGS_CENTRAL2) -ldl -lc -lrockchip_mpp
+ruby_player_steamdeck:code/r_player/ruby_player_steamdeck.o $(FOLDER_BASE)/hdmi.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
+	$(CXX) $(_CFLAGS) $(CFLAGS_RENDERER) -o $@ $^ $(_LDFLAGS) $(LDFLAGS_RENDERER) $(LDFLAGS_CENTRAL) $(LDFLAGS_CENTRAL2) -ldl -lc
 
 ifeq ($(RUBY_BUILD_ENV),radxa)
 tests: test_drm test_log test_port_rx test_port_tx test_link
