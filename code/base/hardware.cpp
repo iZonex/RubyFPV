@@ -1692,7 +1692,7 @@ void hardware_mount_root()
    hw_execute_bash_command("sudo mount -o remount,rw /", NULL);
    #endif
 
-   #if defined(HW_PLATFROM_STEAMDECK)
+   #if defined(HW_PLATFORM_STEAMDECK)
    hw_execute_bash_command("sudo mount -o remount,rw /", NULL);
    #endif
 }

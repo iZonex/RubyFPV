@@ -59,8 +59,8 @@
 #include <pthread.h>
 #include <sys/ioctl.h>
 
-#ifndef HW_PLATFROM_STREAMDECK
-#error "ONLY FOR STREAMDECK PLATFORM!"
+#ifndef HW_PLATFORM_STEAMDECK
+#error "ONLY FOR STEAMDECK PLATFORM!"
 #endif
 
 #include "../renderer/drm_core.h"
