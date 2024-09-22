@@ -11,8 +11,7 @@ _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_OPENIPC
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_OPENIPC
 
-else
-ifeq ($(RUBY_BUILD_ENV),radxa)
+else ifeq ($(RUBY_BUILD_ENV),radxa)
 
 LDFLAGS_CENTRAL := -L/lib/aarch64-linux-gnu -lpthread -lrt -lm
 LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
@@ -25,8 +24,7 @@ _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_RADXA_ZERO3
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_RADXA_ZERO3
 CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o $(FOLDER_CENTRAL_RENDERER)/render_engine_cairo.o $(FOLDER_CENTRAL_RENDERER)/render_engine_ui.o $(FOLDER_CENTRAL_RENDERER)/drm_core.o
 
-else
-ifeq ($(RUBY_BUILD_ENV),steamdeck)
+else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 
 LDFLAGS_CENTRAL := -L/usr/lib/x86_64-linux-gnu -lpthread -lrt -lm
 LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
@@ -60,7 +58,6 @@ _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_PI
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_PI
 CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/lodepng.o $(FOLDER_CENTRAL_RENDERER)/nanojpeg.o $(FOLDER_CENTRAL_RENDERER)/fbgraphics.o $(FOLDER_CENTRAL_RENDERER)/render_engine.o $(FOLDER_CENTRAL_RENDERER)/render_engine_raw.o $(FOLDER_CENTRAL_RENDERER)/render_engine_ui.o $(FOLDER_CENTRAL_RENDERER)/fbg_dispmanx.o
 
-endif
 endif
 
 INCLUDE_CENTRAL := -Imenu -Iosd -I../menu -I../osd -Icode/r_central/menu -Icode/r_central/osd -I../openvg -I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -I/usr/include/freetype2
@@ -211,7 +208,7 @@ vehicle: ruby_start ruby_utils ruby_tx_telemetry ruby_rt_vehicle
 
 ifeq ($(RUBY_BUILD_ENV),radxa)
 station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_radxa
-ifeq ($(RUBY_BUILD_ENV),steamdeck)
+else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_steamdeck
 else
 station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry
@@ -298,6 +295,8 @@ ruby_player_steamdeck:code/r_player/ruby_player_steamdeck.o code/r_player/mpp_co
 
 ifeq ($(RUBY_BUILD_ENV),radxa)
 tests: test_drm test_log test_port_rx test_port_tx test_link
+else ifeq ($(RUBY_BUILD_ENV),steamdeck)
+tests: test_drm test_log test_port_rx test_port_tx test_link
 else
 tests: test_gpio test_log test_port_rx test_port_tx test_link
 endif
@@ -351,7 +350,7 @@ test_link:$(FOLDER_TESTS)/test_link.o $(MODULE_BASE) $(MODULE_BASE2) $(MODULE_CO
 clean:
 	rm -rf ruby_start ruby_i2c ruby_logger ruby_initdhcp ruby_sik_config ruby_alive ruby_video_proc ruby_update ruby_update_worker \
         ruby_tx_telemetry ruby_rt_vehicle \
-          test_* ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_radxa ruby_player_steamdeck\
+          test_* ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_radxa ruby_player_steamdeck \
           ruby_central $(FOLDER_CENTRAL)/ruby_central test_log $(FOLDER_TESTS)/test_log ruby_plugin* \
           $(FOLDER_VEHICLE)/ruby_tx_telemetry $(FOLDER_VEHICLE)/ruby_rt_vehicle \
           $(FOLDER_STATION)/ruby_controller $(FOLDER_STATION)/ruby_rt_station $(FOLDER_STATION)/ruby_tx_rc $(FOLDER_STATION)/ruby_rx_telemetry \
