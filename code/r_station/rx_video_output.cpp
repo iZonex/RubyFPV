@@ -547,7 +547,11 @@ void rx_video_output_enable_pipe_output()
       return;
    }
 
-   s_fPipeVideoOutToPlayer = open(FIFO_RUBY_STATION_VIDEO_STREAM, O_CREAT | O_WRONLY);
+   #ifdef HW_PLATFORM_STEAMDECK
+   s_fPipeVideoOutToPlayer = open(FIFO_RUBY_STATION_VIDEO_STREAM, O_CREAT | O_WRONLY, 0666);
+   #else
+   s_fPipeVideoOutToPlayer = open(FIFO_RUBY_STATION_VIDEO_STREAM, O_WRONLY);
+   #endif
    if ( s_fPipeVideoOutToPlayer < 0 )
    {
       log_error_and_alarm("[VideoOutput] Failed to open video output pipe write endpoint: %s, error code (%d): [%s]",
