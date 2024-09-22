@@ -157,8 +157,6 @@ void _do_test_mode()
 
 void _do_player_mode()
 {
-   if ( mpp_init(g_bUseH265Decoder) != 0 )
-      return;
 
    hdmi_enum_modes();
    int iHDMIIndex = hdmi_load_current_mode();
@@ -178,12 +176,10 @@ void _do_player_mode()
    {
       log_error_and_alarm("Failed to open input file [%s]. Exit.", g_szPlayFileName);
       ruby_drm_core_uninit();
-      mpp_uninit();
       return;
    }
 
    log_line("Opened input video file (%s)", g_szPlayFileName);
-   mpp_start_decoding_thread();
 
 
    u32 uTimeLastCheck = get_current_timestamp_ms();
@@ -205,7 +201,6 @@ void _do_player_mode()
       if ( nRead <= 0 )
          break;
       
-      mpp_feed_data_to_decoder(uBuffer, nRead);
       iTotalRead += nRead;
       if ( g_bDebug )
       {
@@ -228,10 +223,8 @@ void _do_player_mode()
    }
    fclose(fp);
    log_line("Playback of file finished. End of file (%s).", g_szPlayFileName);
-   mpp_mark_end_of_stream();
 
    ruby_drm_core_uninit();
-   mpp_uninit();
 }
 
 void* _thread_consume_pipe_buffer(void *param)
@@ -260,18 +253,10 @@ void* _thread_consume_pipe_buffer(void *param)
       if ( NULL != fpTmp )
          fwrite( &(g_uPipeBuffer[g_iPipeBufferReadPos]), 1, iSize, fpTmp);
 
-      int iRes = mpp_feed_data_to_decoder(&(g_uPipeBuffer[g_iPipeBufferReadPos]), iSize);
-      if ( iRes > 10 )
-         log_line("[Thread] Stalled consuming %d bytes at pos %d (write pos: %d), stall for %d ms", iSize, g_iPipeBufferReadPos, g_iPipeBufferWritePos, iRes);
-      
-      if ( mpp_get_clear_stream_changed_flag() )
-         g_iPipeBufferReadPos = g_iPipeBufferWritePos;
-      else
-      {
-         g_iPipeBufferReadPos += iSize;
-         if ( g_iPipeBufferReadPos >= PIPE_BUFFER_SIZE )
-            g_iPipeBufferReadPos = 0;
-      }
+
+      g_iPipeBufferReadPos += iSize;
+      if ( g_iPipeBufferReadPos >= PIPE_BUFFER_SIZE )
+         g_iPipeBufferReadPos = 0;
    }
    if ( NULL != fpTmp )
       fclose(fpTmp);
@@ -281,9 +266,6 @@ void* _thread_consume_pipe_buffer(void *param)
 
 void _do_stream_mode_pipe()
 {
-   if ( mpp_init(g_bUseH265Decoder) != 0 )
-      return;
-
    hdmi_enum_modes();
    int iHDMIIndex = hdmi_load_current_mode();
    if ( iHDMIIndex < 0 )
@@ -303,12 +285,10 @@ void _do_stream_mode_pipe()
    {
       log_error_and_alarm("Failed to open video stream fifo.");
       ruby_drm_core_uninit();
-      mpp_uninit();
       return;
    }
 
    log_line("Opened input video stream fifo (%s)", FIFO_RUBY_STATION_VIDEO_STREAM);
-   mpp_start_decoding_thread();
 
    FILE* fpTmp = NULL;
    //fpTmp = fopen("rec.h264", "wb");
@@ -419,17 +399,12 @@ void _do_stream_mode_pipe()
    pthread_join(pDecodeThread, NULL );
    log_line("Ended thread to consume pipe input buffer");
 
-   mpp_mark_end_of_stream();
-
    ruby_drm_core_uninit();
-   mpp_uninit();
 }
 
 
 void _do_stream_mode_udp()
 {
-   if ( mpp_init(g_bUseH265Decoder) != 0 )
-      return;
 
    hdmi_enum_modes();
    int iHDMIIndex = hdmi_load_current_mode();
@@ -446,21 +421,8 @@ void _do_stream_mode_udp()
    {
       log_error_and_alarm("Failed to create socket");
       ruby_drm_core_uninit();
-      mpp_uninit();
       return;    
    }
-
-   /*
-   const int optval = 1;
-   if(setsockopt(iSock, SOL_PACKET, PACKET_QDISC_BYPASS, (const void *)&optval , sizeof(optval)) !=0)
-   {
-      close(iSock);
-      log_error_and_alarm("Failed to set socket options");
-      ruby_drm_core_uninit();
-      mpp_uninit();
-      return;    
-   }
-   */
 
    memset(&udpAddr, 0, sizeof(udpAddr));
    udpAddr.sin_family = AF_INET;
@@ -472,12 +434,10 @@ void _do_stream_mode_udp()
    {
       log_error_and_alarm("Failed to bind socket on port %d", DEFAULT_LOCAL_VIDEO_PLAYER_UDP_PORT);
       ruby_drm_core_uninit();
-      mpp_uninit();
       return;    
    }
 
    log_line("Opened input video stream udp socket on port %d", DEFAULT_LOCAL_VIDEO_PLAYER_UDP_PORT);
-   mpp_start_decoding_thread();
 
    u32 uTimeLastCheck = get_current_timestamp_ms();
    unsigned char uBuffer[2049];
@@ -540,7 +500,6 @@ void _do_stream_mode_udp()
          log_line("Start receiving video stream data through udp port (%d bytes)", (int)iRecv);
          bAnyInputEver = true;
       }
-      mpp_feed_data_to_decoder(uBuffer, iRecv);
       iTotalRead += iRecv;
       usleep(2*1000);
       if ( (iCount % 10) == 0 )
@@ -559,10 +518,7 @@ void _do_stream_mode_udp()
       log_line("Ending video stream play due to quit signal.");
 
    close(iSock);
-   mpp_mark_end_of_stream();
-
    ruby_drm_core_uninit();
-   mpp_uninit();
 }
 
 void handle_sigint(int sig) 
