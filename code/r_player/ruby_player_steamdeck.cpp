@@ -65,7 +65,6 @@
 
 #include "../renderer/drm_core.h"
 #include "../renderer/render_engine_cairo.h"
-#include "mpp_core.h"
 
 
 bool g_bQuit = false;
