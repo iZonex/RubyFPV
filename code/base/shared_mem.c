@@ -40,9 +40,13 @@ void* open_shared_mem(const char* name, int size, int readOnly)
 {
    int fd;
    if ( readOnly )
+      log_line("[SharedMem] Opening shared memory object %s in %s mode.", name, readOnly?"read":"write");
       fd = shm_open(name, O_RDONLY, S_IRUSR | S_IWUSR);
+      log_line("[SharedMem] Opened shared memory object %s in %s mode.", name, readOnly?"read":"write");
    else
+      log_line("[SharedMem] Opening shared memory object %s in %s mode.", name, readOnly?"read":"write");
       fd = shm_open(name, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+      log_line("[SharedMem] Opened shared memory object %s in %s mode.", name, readOnly?"read":"write");
 
    if(fd < 0)
    {
