@@ -2316,20 +2316,26 @@ int main(int argc, char *argv[])
 
    if ( ! load_Preferences() )
       save_Preferences();
+   log_line("Preferences loaded.");
 
    if ( ! load_ControllerSettings() )
       save_ControllerSettings();
+   log_line("Controller settings loaded.");
 
    hardware_i2c_load_device_settings();
+   log_line("I2C device settings loaded.");
 
    if ( ! load_ControllerInterfacesSettings() )
       save_ControllerInterfacesSettings();
+   log_line("Controller interfaces settings loaded.");
       
    save_ControllerInterfacesSettings();
+   log_line("Controller interfaces settings saved.");
 
    Preferences* p = get_Preferences();
    ControllerSettings* pcs = get_ControllerSettings();
-   hw_set_priority_current_proc(pcs->iNiceCentral); 
+   hw_set_priority_current_proc(pcs->iNiceCentral);
+   log_line("Set priority to: %d", pcs->iNiceCentral);
 
 
    #if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_STEAMDECK)
