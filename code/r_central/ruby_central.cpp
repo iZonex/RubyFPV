@@ -69,10 +69,10 @@
 #include "../base/ruby_ipc.h"
 #include "../base/core_plugins_settings.h"
 #include "../base/utils.h"
-#if defined (HW_PLATFORM_RASPBERRY)
+#if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_STEAMDECK)
 #include "../renderer/render_engine_raw.h"
 #endif
-#if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
+#if defined (HW_PLATFORM_RADXA_ZERO3)
 #include "../renderer/drm_core.h"
 #include "../renderer/render_engine_cairo.h"
 #endif
