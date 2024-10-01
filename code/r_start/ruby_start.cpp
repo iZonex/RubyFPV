@@ -1585,7 +1585,7 @@ int main(int argc, char *argv[])
       log_line("Starting controller...");
       fflush(stdout);
 
-      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+      #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
       hw_execute_ruby_process(NULL, "ruby_alive", NULL, NULL);
       #endif
    
@@ -1635,7 +1635,7 @@ int main(int argc, char *argv[])
       log_line("Copy boot log to /boot partition. Done.");
       #endif
 
-      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+      #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
       hw_execute_bash_command("rm -rf /config/last_ruby_boot.txt", NULL);
       hw_execute_bash_command("cp -rf logs/log_system.txt /config/last_ruby_boot.txt", NULL);
       log_line("Copy boot log to /config partition. Done.");
@@ -1711,7 +1711,7 @@ int main(int argc, char *argv[])
       log_line("Copy boot log to /boot partition. Done.");
       #endif
 
-      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+      #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
       hw_execute_bash_command("rm -rf /config/last_ruby_boot.txt", NULL);
       hw_execute_bash_command("cp -rf logs/log_system.txt /config/last_ruby_boot.txt", NULL);      
       log_line("Copy boot log to /config partition. Done.");

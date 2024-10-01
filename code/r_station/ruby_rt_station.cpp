@@ -1775,7 +1775,7 @@ void _router_periodic_loop()
    if ( test_link_is_in_progress() )
       test_link_loop();
 
-   #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+   #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
    //if ( g_TimeNow > radio_linkgs_get_last_set_monitor_time() + 2000 )
    //   radio_links_set_monitor_mode();
    #endif
@@ -2339,7 +2339,7 @@ void video_processors_init()
       #ifdef HW_PLATFORM_RASPBERRY
       rx_video_output_enable_pipe_output();
       #endif
-      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+      #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
       //rx_video_output_enable_local_player_udp_output();
       rx_video_output_enable_pipe_output();
       #endif

@@ -202,7 +202,7 @@ void _rx_video_output_launch_video_player()
 
    #endif
 
-   #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+   #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
 
    strcpy(s_szOutputVideoPlayerFilename, VIDEO_PLAYER_UDP);
    log_line("[VideoOutput] Starting video player [%s]", s_szOutputVideoPlayerFilename);

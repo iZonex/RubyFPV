@@ -626,7 +626,7 @@ void radio_links_set_monitor_mode()
       if ( ! hardware_radio_is_wifi_radio(pRadioHWInfo) )
          continue;
 
-      #ifdef HW_PLATFORM_RADXA_ZERO3 || HW_PLATFORM_STEAMDECK
+      #if defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_STEAMDECK)
       //sprintf(szComm, "iwconfig %s mode monitor 2>&1", pRadioHWInfo->szName );
       //hw_execute_bash_command(szComm, NULL);
       //hardware_sleep_ms(uDelayMS);
