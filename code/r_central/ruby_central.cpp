@@ -2340,8 +2340,11 @@ int main(int argc, char *argv[])
    // save_ControllerInterfacesSettings();
    // log_line("Controller interfaces settings saved.");
 
+   log_line("Loading get_Preferences");
    Preferences* p = get_Preferences();
+   log_line("get_ControllerSettings.");
    ControllerSettings* pcs = get_ControllerSettings();
+   log_line("hw_set_priority_current_proc.");
    hw_set_priority_current_proc(pcs->iNiceCentral);
    log_line("Set priority to: %d", pcs->iNiceCentral);
 
