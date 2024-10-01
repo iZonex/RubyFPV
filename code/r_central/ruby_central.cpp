@@ -2331,7 +2331,7 @@ int main(int argc, char *argv[])
    hw_set_priority_current_proc(pcs->iNiceCentral); 
 
 
-   #if defined (HW_PLATFORM_RASPBERRY)
+   #if defined (HW_PLATFORM_RASPBERRY) || defined (HW_PLATFORM_STEAMDECK)
    hdmi_enum_modes();
    #endif
 
@@ -2341,17 +2341,6 @@ int main(int argc, char *argv[])
    int iHDMIIndex = hdmi_load_current_mode();
    if ( iHDMIIndex < 0 )
       iHDMIIndex = hdmi_get_best_resolution_index_for(DEFAULT_RADXA_DISPLAY_WIDTH, DEFAULT_RADXA_DISPLAY_HEIGHT, DEFAULT_RADXA_DISPLAY_REFRESH);
-   log_line("HDMI mode to use: %d (%d x %d @ %d)", iHDMIIndex, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh() );
-   ruby_drm_core_init(0, DRM_FORMAT_ARGB8888, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh());
-   ruby_drm_core_set_plane_properties_and_buffer(ruby_drm_core_get_main_draw_buffer_id());
-   #endif
-
-   #if defined (HW_PLATFORM_STEAMDECK)
-   ruby_drm_core_wait_for_display_connected();
-   hdmi_enum_modes();
-   int iHDMIIndex = hdmi_load_current_mode();
-   if ( iHDMIIndex < 0 )
-      iHDMIIndex = hdmi_get_best_resolution_index_for(DEFAULT_STEAMDECK_DISPLAY_WIDTH, DEFAULT_STEAMDECK_DISPLAY_HEIGHT, DEFAULT_STEAMDECK_DISPLAY_REFRESH);
    log_line("HDMI mode to use: %d (%d x %d @ %d)", iHDMIIndex, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh() );
    ruby_drm_core_init(0, DRM_FORMAT_ARGB8888, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh());
    ruby_drm_core_set_plane_properties_and_buffer(ruby_drm_core_get_main_draw_buffer_id());
@@ -2469,9 +2458,6 @@ int main(int argc, char *argv[])
    #if defined (HW_PLATFORM_RADXA_ZERO3)
    ruby_drm_core_uninit();
    #endif
-   #if defined (HW_PLATFORM_STEAMDECK)
-   ruby_drm_core_uninit();
-   #endif
 
    return 0;
 }
@@ -2521,19 +2507,6 @@ void ruby_reinit_hdmi_display()
    int iHDMIIndex = hdmi_load_current_mode();
    if ( iHDMIIndex < 0 )
       iHDMIIndex = hdmi_get_best_resolution_index_for(DEFAULT_RADXA_DISPLAY_WIDTH, DEFAULT_RADXA_DISPLAY_HEIGHT, DEFAULT_RADXA_DISPLAY_REFRESH);
-   log_line("HDMI mode to use: %d (%d x %d @ %d)", iHDMIIndex, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh() );
-   ruby_drm_core_init(0, DRM_FORMAT_ARGB8888, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh());
-   ruby_drm_core_set_plane_properties_and_buffer(ruby_drm_core_get_main_draw_buffer_id());
-   #endif
-
-   #if defined (HW_PLATFORM_STEAMDECK)
-   ruby_drm_core_uninit();
-   ruby_drm_core_wait_for_display_connected();
-
-   hdmi_enum_modes();
-   int iHDMIIndex = hdmi_load_current_mode();
-   if ( iHDMIIndex < 0 )
-      iHDMIIndex = hdmi_get_best_resolution_index_for(DEFAULT_STEAMDECK_DISPLAY_WIDTH, DEFAULT_STEAMDECK_DISPLAY_HEIGHT, DEFAULT_STEAMDECK_DISPLAY_REFRESH);
    log_line("HDMI mode to use: %d (%d x %d @ %d)", iHDMIIndex, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh() );
    ruby_drm_core_init(0, DRM_FORMAT_ARGB8888, hdmi_get_current_resolution_width(), hdmi_get_current_resolution_height(), hdmi_get_current_resolution_refresh());
    ruby_drm_core_set_plane_properties_and_buffer(ruby_drm_core_get_main_draw_buffer_id());
