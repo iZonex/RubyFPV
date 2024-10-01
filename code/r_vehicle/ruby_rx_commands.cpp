@@ -1092,7 +1092,16 @@ bool process_command(u8* pBuffer, int length)
          strcat(szBuffer, "#");
          #endif
 
+         #ifdef HW_PLATFORM_STEAMDECK
+
+         hw_execute_bash_command_raw("uname -m", szOutput);
+         sprintf(szBuff, "Platform: %s", szOutput);
+
+         #else
+
          hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput);
+
+         #endif
          strcat(szBuffer, "CPU: ");
          strcat(szBuffer, szOutput);
          strcat(szBuffer, "#"); 

@@ -197,8 +197,17 @@ void _hardware_detectSystemType()
    }
    else
       log_line("Hardware: Detected system as controller.");
+   
+   #ifdef HW_PLATFORM_STEAMDECK
 
-   hw_execute_bash_command_raw("cat /proc/device-tree/model", szBuff);
+   hw_execute_bash_command_raw("uname -m", szOutput);
+
+   #else
+
+   hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput);
+
+   #endif
+
    log_line("[Hardware] Board description string: %s", szBuff);
 
    s_uHardwareBoardType = hardware_getOnlyBoardType();

@@ -331,9 +331,17 @@ void MenuRoot::createHWInfo(Menu* pm)
 
    log_line("Menu System: create HW info.");
 
-   hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput);
+   #ifdef HW_PLATFORM_STEAMDECK
 
+   hw_execute_bash_command_raw("uname -m", szOutput);
+   sprintf(szBuff, "Platform: %s", szOutput);
+
+   #else
+
+   hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput);
    sprintf(szBuff, "Board: %s, ", szOutput);
+
+   #endif
    
    int temp = 0;
    fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
