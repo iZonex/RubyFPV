@@ -2327,18 +2327,18 @@ int main(int argc, char *argv[])
       save_ControllerSettings();
    log_line("Controller settings loaded.");
 
-   // log_line("I2C device settings loading...");
-   // hardware_i2c_load_device_settings();
-   // log_line("I2C device settings loaded.");
+   log_line("I2C device settings loading...");
+   hardware_i2c_load_device_settings();
+   log_line("I2C device settings loaded.");
 
-   // log_line("Loading controller interfaces settings...");
-   // if ( ! load_ControllerInterfacesSettings() )
-   //    save_ControllerInterfacesSettings();
-   // log_line("Controller interfaces settings loaded.");
+   log_line("Loading controller interfaces settings...");
+   if ( ! load_ControllerInterfacesSettings() )
+      save_ControllerInterfacesSettings();
+   log_line("Controller interfaces settings loaded.");
    
-   // log_line("Loading controller models...");
-   // save_ControllerInterfacesSettings();
-   // log_line("Controller interfaces settings saved.");
+   log_line("Loading controller models...");
+   save_ControllerInterfacesSettings();
+   log_line("Controller interfaces settings saved.");
 
    log_line("Loading get_Preferences");
    Preferences* p = get_Preferences();
