@@ -183,7 +183,7 @@ int load_ControllerSettings()
 
    char szFile[128];
    strcpy(szFile, FOLDER_CONFIG);
-   log_line("Loading controller settings from file: %s", FOLDER_CONFIG));
+   log_line("Loading controller settings from file: %s", FOLDER_CONFIG);
    strcat(szFile, FILE_CONFIG_CONTROLLER_SETTINGS);
    log_line("Loading controller settings from file: %s", FILE_CONFIG_CONTROLLER_SETTINGS);
    FILE* fd = fopen(szFile, "r");
