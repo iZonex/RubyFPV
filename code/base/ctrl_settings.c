@@ -190,6 +190,7 @@ int load_ControllerSettings()
    log_line("Loading controller settings from file: %s", szFile);
    if ( NULL == fd )
    {
+      log_line("Failed to load controller settings from file: %s (missing file). Resetted controller settings to default.", szFile);
       log_softerror_and_alarm("Failed to load controller settings from file: %s (missing file). Resetted controller settings to default.", szFile);
       reset_ControllerSettings();
       save_ControllerSettings();
