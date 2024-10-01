@@ -2303,6 +2303,7 @@ int main(int argc, char *argv[])
 
    ruby_clear_all_ipc_channels();
 
+   log_line("Open shared mem for ruby_central process watchdog for writing.");
    s_pProcessStatsCentral = shared_mem_process_stats_open_write(SHARED_MEM_WATCHDOG_CENTRAL);
    if ( NULL == s_pProcessStatsCentral )
       log_softerror_and_alarm("Failed to open shared mem for ruby_central process watchdog for writing: %s", SHARED_MEM_WATCHDOG_CENTRAL);
