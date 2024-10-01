@@ -2311,11 +2311,15 @@ int main(int argc, char *argv[])
       log_line("Opened shared mem for ruby_centrall process watchdog for writing.");
  
    ruby_pause_watchdog();
+   log_line("Pause watchdog signal sent.");
 
    controller_compute_cpu_info();
+   log_line("CPU info computed.");
 
    if ( ! load_Preferences() )
+      log_line("Failed to load preferences.");
       save_Preferences();
+      log_line("Preferences saved.");
    log_line("Preferences loaded.");
 
    if ( ! load_ControllerSettings() )
