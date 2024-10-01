@@ -221,6 +221,8 @@ int load_ControllerSettings()
    if ( 1 != fscanf(fd, "%d", &s_CtrlSettings.iHDMIBoost) )
       s_CtrlSettings.iHDMIBoost = 5;
 
+   log_line("Loading network: %s", szFile);
+
    if ( 3 != fscanf(fd, "%d %d %d", &s_CtrlSettings.iTXPowerRTL8812AU, &s_CtrlSettings.iTXPowerRTL8812EU, &s_CtrlSettings.iTXPowerAtheros) )
    {
       s_CtrlSettings.iTXPowerRTL8812AU = DEFAULT_RADIO_TX_POWER_CONTROLLER;
@@ -310,6 +312,7 @@ int load_ControllerSettings()
       s_CtrlSettings.nGraphVideoRefreshInterval = 100;
 
    // Extended values
+   log_line("Loading extended controller settings from file: %s", szFile);
 
    if ( (!failed) && (1 != fscanf(fd, "%d", &s_CtrlSettings.iDisableRetransmissionsAfterControllerLinkLostMiliseconds)) )
       s_CtrlSettings.iDisableRetransmissionsAfterControllerLinkLostMiliseconds = DEFAULT_CONTROLLER_LINK_MILISECONDS_TIMEOUT_TO_DISABLE_RETRANSMISSIONS;
@@ -384,7 +387,9 @@ int load_ControllerSettings()
       s_CtrlSettings.iRadioBypassSocketBuffers = DEFAULT_BYPASS_SOCKET_BUFFERS;
    }
 
+
    fclose(fd);
+   log_line("Loaded controller settings from file: %s", szFile);
 
    //--------------------------------------------------------
    // Validate settings
