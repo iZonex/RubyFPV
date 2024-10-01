@@ -196,6 +196,8 @@ int load_ControllerSettings()
       return 0;
    }
 
+   log_line("Null passed");
+
    int iDummy = 0;
    int failed = 0;
    char szBuff[256];
