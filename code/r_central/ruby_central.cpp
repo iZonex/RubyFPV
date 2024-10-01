@@ -2322,6 +2322,7 @@ int main(int argc, char *argv[])
       log_line("Preferences saved.");
    log_line("Preferences loaded.");
 
+   log_line("Loading controller settings...");
    if ( ! load_ControllerSettings() )
       save_ControllerSettings();
    log_line("Controller settings loaded.");
