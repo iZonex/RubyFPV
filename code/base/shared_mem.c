@@ -46,7 +46,7 @@ void* open_shared_mem(const char* name, int size, int readOnly)
    }
    else {
       log_line("[SharedMem] Opening shared memory object %s in %s mode.", name, readOnly?"read":"write");
-      fd = shm_open(name, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+      fd = shm_open(name, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
       log_line("[SharedMem] Opened shared memory object %s in %s mode.", name, readOnly?"read":"write");
    }
 
