@@ -200,11 +200,11 @@ void _hardware_detectSystemType()
    
    #ifdef HW_PLATFORM_STEAMDECK
 
-   hw_execute_bash_command_raw("uname -m", szOutput);
+   hw_execute_bash_command_raw("uname -m", szBuff);
 
    #else
 
-   hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput);
+   hw_execute_bash_command_raw("cat /proc/device-tree/model", szBuff);
 
    #endif
 
