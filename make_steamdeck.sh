@@ -14,14 +14,15 @@ if [[ "$DISTRO" == "ubuntu" ]]; then
     echo "Running on Ubuntu. Installing dependencies..."
     sudo apt-get update
     sudo apt-get install -y libcairo2-dev build-essential libpcap-dev pkg-config \
-        libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-gfx-dev cmake
+        libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-gfx-dev libdrm-dev \
+        steam-devices cmake
     # Note: 'libdrv-dev' does not seem to be a standard package in Ubuntu repositories.
     # Please ensure that this package is correct or provide the correct package name.
 elif [[ "$DISTRO" == "arch" ]]; then
     echo "Running on Arch Linux. Installing dependencies..."
     sudo pacman -Syu --noconfirm
     sudo pacman -S --noconfirm base-devel cairo libpcap pkgconf \
-        sdl2 sdl2_image sdl2_ttf sdl2_gfx cmake steam
+        sdl2 sdl2_image sdl2_ttf sdl2_gfx cmake libdrm steam
     # Note: 'libdrv-dev' does not have a direct equivalent in Arch Linux repositories.
     # Please ensure that this package is correct or provide the correct package name.
 else
