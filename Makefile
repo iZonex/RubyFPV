@@ -29,16 +29,16 @@ else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 # Steamworks SDK path
 STEAMWORKS_PATH := $(PWD)/deps/steamworks_sdk
 
-# Add Steamworks SDK linking to _LDFLAGS
-_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -lsteam_api -I$(STEAMWORKS_PATH)/public/steam
+# Correct the order: specify the library path before linking the library
+_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -L$(STEAMWORKS_PATH)/redistributable_bin/linux64 -lsteam_api
 
-LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public/steam
-LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public/steam
+LDFLAGS_CENTRAL := -lpthread -lrt -lm -L$(STEAMWORKS_PATH)/redistributable_bin/linux64 -lsteam_api
+LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -L$(STEAMWORKS_PATH)/redistributable_bin/linux64 -lsteam_api
 
 LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image -ldrm
 
-# Add Steamworks SDK include path specifically for SteamDeck
-CFLAGS_STEAMDECK_RENDERER := -I/usr/include/libdrm -I$(STEAMWORKS_PATH)/public/steam
+# Ensure the correct Steamworks SDK include path is added to CFLAGS
+CFLAGS_RENDERER := -I/usr/include/libdrm -I$(STEAMWORKS_PATH)/public/steam
 
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
@@ -46,13 +46,6 @@ _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
 CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o \
                        $(FOLDER_CENTRAL_RENDERER)/render_engine_sdl2.o \
                        $(FOLDER_CENTRAL_RENDERER)/render_engine_ui.o
-
-# Use the specific CFLAGS for SteamDeck renderer
-$(FOLDER_CENTRAL_RENDERER)/%.o: $(FOLDER_CENTRAL_RENDERER)/%.c
-	$(CC) $(_CFLAGS) $(CFLAGS_STEAMDECK_RENDERER) -c -o $@ $<
-
-$(FOLDER_CENTRAL_RENDERER)/%.o: $(FOLDER_CENTRAL_RENDERER)/%.cpp
-	$(CXX) $(_CFLAGS) $(CFLAGS_STEAMDECK_RENDERER) -c -o $@ $<
 
 else
 
