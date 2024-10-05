@@ -27,7 +27,7 @@ CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o $(FOLDER_CENTR
 else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 
 # Steamworks SDK path
-STEAMWORKS_PATH := $(PWD)/deps/steamworks_sdk
+STEAMWORKS_PATH := $(PWD)/code/deps/steamworks_sdk
 
 # Add the Steamworks SDK path to link against the Steam API shared library
 _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -L$(STEAMWORKS_PATH)/redistributable_bin/linux64 -lsteam_api
