@@ -595,12 +595,16 @@ int main(int argc, char *argv[])
    printf("\nRuby: Start on console (%s)\n", ((tty_name != NULL)? tty_name:"N/A"));
    fflush(stdout);
       
-   if ( g_bDebug )
+   #if !defined(HW_PLATFORM_STEAMDECK)
+      if ( g_bDebug )
+         foundGoodConsole = true;
+      if ( (NULL != tty_name) && strcmp(tty_name, "/dev/tty1") == 0 )
+         foundGoodConsole = true;
+      if ( (NULL != tty_name) && strcmp(tty_name, "/dev/pts/0") == 0 )
+         foundGoodConsole = true;
+   #else
       foundGoodConsole = true;
-   if ( (NULL != tty_name) && strcmp(tty_name, "/dev/tty1") == 0 )
-      foundGoodConsole = true;
-   if ( (NULL != tty_name) && strcmp(tty_name, "/dev/pts/0") == 0 )
-      foundGoodConsole = true;
+   #endif
 
    #if defined (HW_PLATFORM_RASPBERRY)
    sprintf(szComm, "echo 'Ruby execute for Raspberry platform' >> /tmp/ruby_boot.log");
