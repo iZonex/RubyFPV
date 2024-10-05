@@ -677,6 +677,11 @@ const char* str_get_hardware_board_name(u32 board_type)
       return s_szBoardTypeRadxaZero3;
    #endif
 
+   #if defined(HW_PLATFORM_STEAMDECK)
+   if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_STEAMDECK )
+      return s_szBoardSTypeSteamDeck;
+   #endif
+
    if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_OPENIPC_GOKE200 )
       return s_szBoardTypeOpenIPCGoke200;
    if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_OPENIPC_GOKE210 )
@@ -758,6 +763,7 @@ const char* str_get_hardware_board_name_short(u32 board_type)
    if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_RADXA_ZERO3 )
       return s_szBoardSTypeRadxaZero3;
    #endif
+   
    #if defined(HW_PLATFORM_STEAMDECK)
    if ( (board_type & BOARD_TYPE_MASK) == BOARD_TYPE_STEAMDECK )
       return s_szBoardSTypeSteamDeck;
