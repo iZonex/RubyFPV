@@ -30,15 +30,15 @@ else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 STEAMWORKS_PATH := $(PWD)/deps/steamworks_sdk
 
 # Add Steamworks SDK linking to _LDFLAGS
-_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -lsteam_api -I$(STEAMWORKS_PATH)/public
+_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -lsteam_api -I$(STEAMWORKS_PATH)/public/steam
 
-LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public
-LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public
+LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public/steam
+LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public/steam
 
 LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image -ldrm
 
 # Add Steamworks SDK include path specifically for SteamDeck
-CFLAGS_STEAMDECK_RENDERER := -I/usr/include/libdrm -I$(STEAMWORKS_PATH)/public
+CFLAGS_STEAMDECK_RENDERER := -I/usr/include/libdrm -I$(STEAMWORKS_PATH)/public/steam
 
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
