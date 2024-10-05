@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
    log_line("Test Render UI (mode %d)", g_iMode);
 
-   #if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
+   #if defined (HW_PLATFORM_RADXA_ZERO3)
    if ( 0 == g_iMode )
       ruby_drm_core_init(0, DRM_FORMAT_ARGB8888, 1920, 1080, 60);
    else if ( 1 == g_iMode )
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 
    render_free_engine();
 
-   #if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
+   #if defined (HW_PLATFORM_RADXA_ZERO3)
    ruby_drm_core_uninit();
    #endif
 
