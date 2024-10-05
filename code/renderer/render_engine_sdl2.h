@@ -16,36 +16,36 @@ public:
     RenderEngineSDL2();
     virtual ~RenderEngineSDL2();
 
-    virtual uint32_t loadImage(const char* szFile) override;
-    virtual void freeImage(uint32_t idImage) override;
-    virtual uint32_t loadIcon(const char* szFile) override;
-    virtual void freeIcon(uint32_t idIcon) override;
-    virtual int getImageWidth(uint32_t uImageId) override;
-    virtual int getImageHeight(uint32_t uImageId) override;
-    virtual void changeImageHue(uint32_t uImageId, uint8_t r, uint8_t g, uint8_t b) override;
+    virtual uint32_t loadImage(const char* szFile);
+    virtual void freeImage(uint32_t idImage);
+    virtual uint32_t loadIcon(const char* szFile);
+    virtual void freeIcon(uint32_t idIcon);
+    virtual int getImageWidth(uint32_t uImageId);
+    virtual int getImageHeight(uint32_t uImageId);
+    virtual void changeImageHue(uint32_t uImageId, uint8_t r, uint8_t g, uint8_t b);
 
-    virtual void startFrame() override;
-    virtual void endFrame() override;
-    virtual void rotate180() override;
+    virtual void startFrame();
+    virtual void endFrame();
+    virtual void rotate180();
 
-    virtual void drawImage(float xPos, float yPos, float fWidth, float fHeight, uint32_t imageId) override;
+    virtual void drawImage(float xPos, float yPos, float fWidth, float fHeight, uint32_t imageId);
     virtual void bltImage(float xPosDest, float yPosDest, float fWidthDest, float fHeightDest,
-                          int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, uint32_t uImageId) override;
-    virtual void drawIcon(float xPos, float yPos, float fWidth, float fHeight, uint32_t iconId) override;
+                          int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, uint32_t uImageId);
+    virtual void drawIcon(float xPos, float yPos, float fWidth, float fHeight, uint32_t iconId);
     virtual void bltIcon(float xPosDest, float yPosDest, float fWidthDest, float fHeightDest,
-                         int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, uint32_t iconId) override;
+                         int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, uint32_t iconId);
 
-    virtual void drawLine(float x1, float y1, float x2, float y2) override;
-    virtual void drawRect(float xPos, float yPos, float fWidth, float fHeight) override;
-    virtual void drawRoundRect(float xPos, float yPos, float fWidth, float fHeight, float fCornerRadius) override;
-    virtual void drawTriangle(float x1, float y1, float x2, float y2, float x3, float y3) override;
-    virtual void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3) override;
-    virtual void drawPolyLine(const float* x, const float* y, int count) override;
-    virtual void fillPolygon(const float* x, const float* y, int count) override;
+    virtual void drawLine(float x1, float y1, float x2, float y2);
+    virtual void drawRect(float xPos, float yPos, float fWidth, float fHeight);
+    virtual void drawRoundRect(float xPos, float yPos, float fWidth, float fHeight, float fCornerRadius);
+    virtual void drawTriangle(float x1, float y1, float x2, float y2, float x3, float y3);
+    virtual void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3);
+    virtual void drawPolyLine(const float* x, const float* y, int count);
+    virtual void fillPolygon(const float* x, const float* y, int count);
 
-    virtual void fillCircle(float x, float y, float r) override;
-    virtual void drawCircle(float x, float y, float r) override;
-    virtual void drawArc(float x, float y, float r, float a1, float a2) override;
+    virtual void fillCircle(float x, float y, float r);
+    virtual void drawCircle(float x, float y, float r);
+    virtual void drawArc(float x, float y, float r, float a1, float a2);
 
 protected:
     SDL_Window* m_pWindow = nullptr;
