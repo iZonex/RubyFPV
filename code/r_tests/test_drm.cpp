@@ -15,9 +15,12 @@
 #if defined (HW_PLATFORM_RASPBERRY)
 #include "../renderer/render_engine_raw.h"
 #endif
-#if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_STEAMDECK)
+#if defined (HW_PLATFORM_RADXA_ZERO3)
 #include "../renderer/drm_core.h"
 #include "../renderer/render_engine_cairo.h"
+#endif
+#if defined (HW_PLATFORM_STEAMDECK)
+#include "../renderer/render_engine_sdl2.h"
 #endif
 
 bool g_bQuit = false;
