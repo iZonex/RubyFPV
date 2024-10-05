@@ -26,8 +26,11 @@ CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o $(FOLDER_CENTR
 
 else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 
-LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api
-LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api
+# Steamworks SDK path
+STEAMWORKS_PATH := $(PWD)/deps/steamworks_sdk
+
+LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
+LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
 
 LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image -ldrm
 CFLAGS_RENDERER := -I/usr/include/libdrm
