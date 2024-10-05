@@ -29,7 +29,7 @@ else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 LDFLAGS_CENTRAL := -lpthread -lrt -lm
 LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
 
-LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image
+LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image -ldrm
 CFLAGS_RENDERER := -I/usr/include/libdrm
 
 _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections
