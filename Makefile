@@ -26,24 +26,23 @@ CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o $(FOLDER_CENTR
 
 else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 
-LDFLAGS_CENTRAL := -L/usr/lib/x86_64-linux-gnu -lpthread -lrt -lm
-LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
+LDFLAGS_CENTRAL := -lpthread -lrt -lm
+LDFLAGS_CENTRAL2 := -lGLESv2 -lEGL -lpthread -lrt -lm
 
-# Adjust renderer flags based on SteamDeck's needs (use drm and cairo if applicable)
-LDFLAGS_RENDERER := -ldrm -lcairo
-CFLAGS_RENDERER := -I/usr/include/drm -I/usr/include/libdrm
-CFLAGS_RENDERER += `pkg-config cairo --cflags`
+LDFLAGS_RENDERER := -L../openvg -lGLESv2 -lEGL -lfreetype -lpng -ljpeg
+CFLAGS_RENDERER := -I/usr/include/libdrm
 
-# Link other necessary libraries (excluding i2c, CSI, GPIO)
-_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections 
-_CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
-_CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
+_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections
 
-# Renderer files
-CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o \
-                       $(FOLDER_CENTRAL_RENDERER)/render_engine_cairo.o \
-                       $(FOLDER_CENTRAL_RENDERER)/render_engine_ui.o \
-                       $(FOLDER_CENTRAL_RENDERER)/drm_core.o
+_CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_X86
+_CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_X86
+
+CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/lodepng.o \
+                       $(FOLDER_CENTRAL_RENDERER)/nanojpeg.o \
+                       $(FOLDER_CENTRAL_RENDERER)/fbgraphics.o \
+                       $(FOLDER_CENTRAL_RENDERER)/render_engine.o \
+                       $(FOLDER_CENTRAL_RENDERER)/render_engine_raw.o \
+                       $(FOLDER_CENTRAL_RENDERER)/render_engine_ui.o
 
 else
 
