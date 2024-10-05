@@ -56,31 +56,9 @@
 #define CAMERA_TYPE_OPENIPC_IMX335 21
 #define CAMERA_TYPE_OPENIPC_IMX415 22
 
-
-#define MAX_JOYSTICK_INTERFACE_NAME 128
-#define MAX_JOYSTICK_INTERFACES 4
-#define MAX_JOYSTICK_AXES 24
-#define MAX_JOYSTICK_BUTTONS 24
-
 #ifdef __cplusplus
 extern "C" {
 #endif 
-
-
-typedef struct
-{
-   int deviceIndex;
-   char szName[MAX_JOYSTICK_INTERFACE_NAME];
-   u32 uId;
-   u8 countAxes;
-   u8 countButtons;
-   int axesValues[MAX_JOYSTICK_AXES];
-   int buttonsValues[MAX_JOYSTICK_BUTTONS];
-   int axesValuesPrev[MAX_JOYSTICK_AXES];
-   int buttonsValuesPrev[MAX_JOYSTICK_BUTTONS];
-   int fd;
-} hw_joystick_info_t;
-
 
 
 int init_hardware();
@@ -101,14 +79,6 @@ int hardware_board_is_raspberry(u32 uBoardType);
 int hardware_board_is_openipc(u32 uBoardType);
 int hardware_board_is_goke(u32 uBoardType);
 int hardware_board_is_sigmastar(u32 uBoardType);
-
-void hardware_enum_joystick_interfaces();
-int hardware_get_joystick_interfaces_count();
-hw_joystick_info_t* hardware_get_joystick_info(int index);
-int hardware_open_joystick(int joystickIndex);
-void hardware_close_joystick(int joystickIndex);
-int hardware_read_joystick(int joystickIndex, int miliSec);
-int hardware_is_joystick_opened(int joystickIndex);
 
 u16 hardware_get_flags();
 
