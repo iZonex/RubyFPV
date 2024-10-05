@@ -29,13 +29,16 @@ else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 # Steamworks SDK path
 STEAMWORKS_PATH := $(PWD)/deps/steamworks_sdk
 
+# Add Steamworks SDK linking to _LDFLAGS
+_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
+
 LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
 LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
 
 LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image -ldrm
-CFLAGS_RENDERER := -I/usr/include/libdrm
 
-_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections
+# Add Steamworks SDK include path specifically for SteamDeck
+CFLAGS_STEAMDECK_RENDERER := -I/usr/include/libdrm -I$(STEAMWORKS_PATH)/public
 
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
@@ -44,7 +47,14 @@ CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o \
                        $(FOLDER_CENTRAL_RENDERER)/render_engine_sdl2.o \
                        $(FOLDER_CENTRAL_RENDERER)/render_engine_ui.o
 
-else
+# Use the specific CFLAGS for SteamDeck renderer
+$(FOLDER_CENTRAL_RENDERER)/%.o: $(FOLDER_CENTRAL_RENDERER)/%.c
+	$(CC) $(_CFLAGS) $(CFLAGS_STEAMDECK_RENDERER) -c -o $@ $<
+
+$(FOLDER_CENTRAL_RENDERER)/%.o: $(FOLDER_CENTRAL_RENDERER)/%.cpp
+	$(CXX) $(_CFLAGS) $(CFLAGS_STEAMDECK_RENDERER) -c -o $@ $<
+
+endif
 
 LDFLAGS_CENTRAL := -L/usr/lib/arm-linux-gnueabihf -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lm
 LDFLAGS_CENTRAL2 := -L/opt/vc/lib/ -lbrcmGLESv2 -lbrcmEGL -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lm -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lmmal  -lmmal_core -lmmal_util -lmmal_vc_client  
