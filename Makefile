@@ -30,10 +30,10 @@ else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 STEAMWORKS_PATH := $(PWD)/deps/steamworks_sdk
 
 # Add Steamworks SDK linking to _LDFLAGS
-_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
+_LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -lsteam_api -I$(STEAMWORKS_PATH)/public
 
-LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
-LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api -L$(STEAMWORKS_PATH)/redistributable_bin/linux64
+LDFLAGS_CENTRAL := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public
+LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -lsteam_api -I$(STEAMWORKS_PATH)/public
 
 LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image -ldrm
 
