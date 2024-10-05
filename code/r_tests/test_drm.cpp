@@ -70,7 +70,9 @@ int main(int argc, char *argv[])
       ruby_drm_core_init(1, DRM_FORMAT_ARGB8888, 1920, 1080, 60);
    #endif
 
+   #if defined (HW_PLATFORM_RADXA_ZERO3) || defined (HW_PLATFORM_RASPBERRY)
    ruby_drm_core_set_plane_properties_and_buffer(ruby_drm_core_get_main_draw_buffer_id());
+   #endif
    
    RenderEngine* g_pRenderEngine = render_init_engine();
 
