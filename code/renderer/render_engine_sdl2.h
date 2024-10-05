@@ -7,8 +7,8 @@
 #include <array>
 #include <cmath>
 
-constexpr int MAX_RAW_IMAGES = 100;
-constexpr int MAX_RAW_ICONS = 50;
+#define MAX_RAW_IMAGES 100
+#define MAX_RAW_ICONS 50
 
 class RenderEngineSDL2 : public RenderEngine
 {
