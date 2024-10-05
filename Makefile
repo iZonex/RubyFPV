@@ -27,9 +27,9 @@ CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o $(FOLDER_CENTR
 else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 
 LDFLAGS_CENTRAL := -lpthread -lrt -lm
-LDFLAGS_CENTRAL2 := -lGLESv2 -lEGL -lpthread -lrt -lm
+LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
 
-LDFLAGS_RENDERER := -L../openvg -lGLESv2 -lEGL -lfreetype -lpng -ljpeg
+LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image
 CFLAGS_RENDERER := -I/usr/include/libdrm
 
 _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections
@@ -37,11 +37,8 @@ _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
 
-CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/lodepng.o \
-                       $(FOLDER_CENTRAL_RENDERER)/nanojpeg.o \
-                       $(FOLDER_CENTRAL_RENDERER)/fbgraphics.o \
-                       $(FOLDER_CENTRAL_RENDERER)/render_engine.o \
-                       $(FOLDER_CENTRAL_RENDERER)/render_engine_raw.o \
+CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/render_engine.o \
+                       $(FOLDER_CENTRAL_RENDERER)/render_engine_sdl2.o \
                        $(FOLDER_CENTRAL_RENDERER)/render_engine_ui.o
 
 else

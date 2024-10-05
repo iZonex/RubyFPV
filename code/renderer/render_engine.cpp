@@ -43,7 +43,7 @@
 #endif
 
 #if defined (HW_PLATFORM_STEAMDECK)
-#include "render_engine_cairo.h"
+#include "render_engine_sdl2.h"
 #endif
 
 #include "../base/base.h"
@@ -67,7 +67,7 @@ RenderEngine* render_init_engine()
       #endif
       #if defined (HW_PLATFORM_STEAMDECK)
       s_bRenderEngineSupportsRawFonts = true;
-      s_pRenderEngine = new RenderEngineCairo();
+      s_pRenderEngine = new RenderEngineSDL2();
       #endif
 
       if (NULL != s_pRenderEngine )
