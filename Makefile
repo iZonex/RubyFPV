@@ -54,7 +54,7 @@ $(FOLDER_CENTRAL_RENDERER)/%.o: $(FOLDER_CENTRAL_RENDERER)/%.c
 $(FOLDER_CENTRAL_RENDERER)/%.o: $(FOLDER_CENTRAL_RENDERER)/%.cpp
 	$(CXX) $(_CFLAGS) $(CFLAGS_STEAMDECK_RENDERER) -c -o $@ $<
 
-endif
+else
 
 LDFLAGS_CENTRAL := -L/usr/lib/arm-linux-gnueabihf -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lm
 LDFLAGS_CENTRAL2 := -L/opt/vc/lib/ -lbrcmGLESv2 -lbrcmEGL -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lm -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lmmal  -lmmal_core -lmmal_util -lmmal_vc_client  
