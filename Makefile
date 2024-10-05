@@ -29,15 +29,13 @@ else ifeq ($(RUBY_BUILD_ENV),steamdeck)
 # Steamworks SDK path
 STEAMWORKS_PATH := $(PWD)/deps/steamworks_sdk
 
-# Correct the order: specify the library path before linking the library
+# Add the Steamworks SDK path to link against the Steam API shared library
 _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections -L$(STEAMWORKS_PATH)/redistributable_bin/linux64 -lsteam_api
 
 LDFLAGS_CENTRAL := -lpthread -lrt -lm -L$(STEAMWORKS_PATH)/redistributable_bin/linux64 -lsteam_api
 LDFLAGS_CENTRAL2 := -lpthread -lrt -lm -L$(STEAMWORKS_PATH)/redistributable_bin/linux64 -lsteam_api
 
-LDFLAGS_RENDERER := `sdl2-config --libs` -lSDL2_image -ldrm
-
-# Ensure the correct Steamworks SDK include path is added to CFLAGS
+# Include the Steamworks SDK headers
 CFLAGS_RENDERER := -I/usr/include/libdrm -I$(STEAMWORKS_PATH)/public/steam
 
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK

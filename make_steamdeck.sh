@@ -51,6 +51,8 @@ mkdir -p "$FOLDER_BINARIES" "$FOLDER_CONFIG" "$FOLDER_CONFIG_MODELS" "$FOLDER_LO
     "$FOLDER_OSD_PLUGINS" "$FOLDER_CORE_PLUGINS" "$FOLDER_UPDATES" "$FOLDER_RUBY_TEMP" \
     "$FOLDER_USB_MOUNT" "$FOLDER_TEMP_VIDEO_MEM" "$FOLDER_WINDOWS_PARTITION"
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/deps/steamworks_sdk/redistributable_bin/linux64
+
 # Compile the project
 make clean
 make all RUBY_BUILD_ENV=steamdeck
