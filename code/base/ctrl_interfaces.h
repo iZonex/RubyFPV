@@ -1,5 +1,6 @@
 #pragma once
 #include "../base/hardware.h"
+#include "../base/hardware_joystick.h"
 #include "../base/models.h"
 
 #define CONTROLLER_INTERFACES_STAMP_ID "V.7.2"

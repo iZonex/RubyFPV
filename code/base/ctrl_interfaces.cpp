@@ -32,6 +32,7 @@
 #include "base.h"
 #include "config.h"
 #include "hardware.h"
+#include "hardware_joystick.h"
 #include "hw_procs.h"
 #include "hardware_radio.h"
 #include "ctrl_interfaces.h"
