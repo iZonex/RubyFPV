@@ -34,8 +34,8 @@ CFLAGS_RENDERER := -I/usr/include/libdrm
 
 _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections
 
-_CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_X86
-_CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_X86
+_CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
+_CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_STEAMDECK
 
 CENTRAL_RENDER_CODE := $(FOLDER_CENTRAL_RENDERER)/lodepng.o \
                        $(FOLDER_CENTRAL_RENDERER)/nanojpeg.o \
@@ -208,7 +208,7 @@ vehicle: ruby_start ruby_utils ruby_tx_telemetry ruby_rt_vehicle
 ifeq ($(RUBY_BUILD_ENV),radxa)
 station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_radxa
 else ifeq ($(RUBY_BUILD_ENV),steamdeck)
-station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_steamdeck
+station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry
 else
 station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry
 endif
