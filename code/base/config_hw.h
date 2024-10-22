@@ -11,6 +11,10 @@
 #define HW_PLATFORM_RADXA_ZERO3
 #endif
 
+#ifdef RUBY_BUILD_HW_PLATFORM_LINUX_AMD64
+#define HW_PLATFORM_LINUX_AMD64
+#endif
+
 #ifdef RUBY_BUILD_HW_PLATFORM_PI
 #define HW_PLATFORM_RASPBERRY
 #endif
@@ -18,14 +22,14 @@
 // Select the default hw platform to build for
 // Detected from make params (above)
 //#define HW_PLATFORM_OPENIPC_CAMERA
-//#define HW_PLATFORM_LINUX_GENERIC
+//#define HW_PLATFORM_LINUX_AMD64
 //#define HW_PLATFORM_RADXA_ZERO3
 //#define HW_PLATFORM_RASPBERRY
 
 
 // Make sure one hardware platform is defined
 #ifndef HW_PLATFORM_OPENIPC_CAMERA
-#ifndef HW_PLATFORM_LINUX_GENERIC
+#ifndef HW_PLATFORM_LINUX_AMD64
 #ifndef HW_PLATFORM_RASPBERRY
 #ifndef HW_PLATFORM_RADXA_ZERO3
 #error "NO HARDWARE PLATFORM DEFINED!"

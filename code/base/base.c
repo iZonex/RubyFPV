@@ -475,8 +475,8 @@ void log_arguments(int argc, char *argv[])
 
    #if defined(HW_PLATFORM_OPENIPC_CAMERA)
    strcpy(szHWPlatform, "OPIPC");
-   #elif defined(HW_PLATFORM_LINUX_GENERIC)
-   strcpy(szHWPlatform, "Linux");
+   #elif defined(HW_PLATFORM_LINUX_AMD64)
+   strcpy(szHWPlatform, "Linux x64");
    #elif defined(HW_PLATFORM_RASPBERRY)
    strcpy(szHWPlatform, "PI");
    #elif defined(HW_PLATFORM_RADXA_ZERO3)

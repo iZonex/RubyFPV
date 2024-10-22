@@ -114,7 +114,7 @@ void _log_platform(bool bNewLine)
 {
    #if defined(HW_PLATFORM_OPENIPC_CAMERA)
    printf("Built for OpenIPC camera.");
-   #elif defined(HW_PLATFORM_LINUX_GENERIC)
+   #elif defined(HW_PLATFORM_LINUX_AMD64)
    printf("Built for Linux");
    #elif defined(HW_PLATFORM_RASPBERRY)
    printf("Built for Raspberry");

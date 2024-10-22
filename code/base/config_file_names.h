@@ -107,10 +107,6 @@
 #define FILE_FORCE_ROUTER "/boot/forcerouter"
 #define FILE_FORCE_RESET "/boot/forcereset"
 
-//#define VIDEO_RECORDER_COMMAND "raspivid"
-//#define VIDEO_RECORDER_COMMAND_VEYE "/usr/local/bin/veye_raspivid"
-//#define VIDEO_RECORDER_COMMAND_VEYE307 "/usr/local/bin/307/veye_raspivid"
-//#define VIDEO_RECORDER_COMMAND_VEYE_SHORT_NAME "veye_raspivid"
 #define VIDEO_RECORDER_COMMAND "ruby_capture_raspi"
 #define VIDEO_RECORDER_COMMAND_VEYE "./ruby_capture_veye"
 #define VIDEO_RECORDER_COMMAND_VEYE307 "./ruby_capture_veye"
@@ -125,6 +121,35 @@
 
 #endif
 
+//-------------------------------------------
+
+#ifdef HW_PLATFORM_LINUX_AMD64
+
+#define FOLDER_BINARIES "/usr/local/bin/ruby/"
+#define FOLDER_CONFIG "/etc/ruby/config/"
+#define FOLDER_CONFIG_MODELS "/etc/ruby/config/models/"
+#define FOLDER_VEHICLE_HISTORY "/var/lib/ruby/vehicle-history-%d/"
+#define FOLDER_LOGS "/var/log/ruby/"
+#define FOLDER_MEDIA "/var/lib/ruby/media/"
+#define FOLDER_MEDIA_VEHICLE_DATA "/var/lib/ruby/media/vehicle-%u/"
+#define FOLDER_OSD_PLUGINS "/usr/local/lib/ruby/plugins/osd/"
+#define FOLDER_CORE_PLUGINS "/usr/local/lib/ruby/plugins/core/"
+#define FOLDER_UPDATES "/usr/local/share/ruby/updates/"
+#define FOLDER_RUBY_TEMP "/var/tmp/ruby/"
+#define FOLDER_USB_MOUNT "/media/usb/"
+#define FOLDER_TEMP_VIDEO_MEM "/var/tmp/ruby/memdisk/"
+#define FOLDER_WINDOWS_PARTITION "/var/lib/ruby/updates/"
+
+#define FILE_FORCE_VEHICLE "/var/lib/ruby/updates/forcevehicle"
+#define FILE_FORCE_VEHICLE_NO_CAMERA "/var/lib/ruby/updates/force_no_camera"
+#define FILE_FORCE_ROUTER "/var/lib/ruby/updates/forcerouter"
+#define FILE_FORCE_RESET "/var/lib/ruby/updates/forcereset"
+
+#define VIDEO_PLAYER_PIPE "/var/run/ruby_player_p"
+#define VIDEO_PLAYER_STDIN "/var/run/ruby_player_s"
+#define VIDEO_PLAYER_OFFLINE "/var/run/ruby_player_f2"
+
+#endif
 
 // --------------------------------------------------------------------------------
 
