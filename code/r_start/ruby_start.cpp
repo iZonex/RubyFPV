@@ -910,7 +910,11 @@ int main(int argc, char *argv[])
    szOutput[0] = 0;
 
    if ( bIsFirstBoot )
+   {
+      log_line("First boot detected, running first boot initialization...");
       do_first_boot_pre_initialization();
+      log_line("First boot initialization done.");
+   }
 
    #ifdef HW_PLATFORM_RADXA_ZERO3
    hw_execute_bash_command("ip link set wlx down 2>&1 1>/dev/null", NULL);
@@ -920,7 +924,9 @@ int main(int argc, char *argv[])
    hw_execute_bash_command("modprobe i2c-dev", NULL);
    #endif
 
+   log_line("Radio modules loading...");
    hardware_radio_load_radio_modules();
+   log_line("Radio modules loaded.");
      
    hardware_sleep_ms(50);
 
