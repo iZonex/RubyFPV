@@ -423,7 +423,6 @@ void hardware_reboot()
 void get_cpu_info(char* szBuffer, size_t bufferSize) {
    char szOutput[256];
 
-   hw_execute_bash_command_raw("cat /proc/device-tree/model", szBuff);
    hw_execute_bash_command_raw("uname -m", szOutput);
 
    if (strcmp(szOutput, "x86_64") == 0 || strcmp(szOutput, "i686") == 0) {
