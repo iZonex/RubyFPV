@@ -237,52 +237,102 @@ void _check_files()
 
    #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_LINUX_AMD64)
    if( access( "ruby_controller", R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " ruby_controller"); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ruby_controller");
+      printf("File check failed: ruby_controller is missing or inaccessible.\n");
+   }
    if( access( "ruby_rt_station", R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " ruby_rt_station"); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ruby_rt_station");
+      printf("File check failed: ruby_rt_station is missing or inaccessible.\n");
+   }
    if( access( "ruby_rx_telemetry", R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " ruby_rx_telemetry"); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ruby_rx_telemetry");
+      printf("File check failed: ruby_rx_telemetry is missing or inaccessible.\n");
+   }
    if( access( "ruby_video_proc", R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " ruby_video_proc"); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ruby_video_proc");
+      printf("File check failed: ruby_video_proc is missing or inaccessible.\n");
+   }
 
    if( access( VIDEO_PLAYER_PIPE, R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " "); strcat(szFilesMissing, VIDEO_PLAYER_PIPE); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ");
+      strcat(szFilesMissing, VIDEO_PLAYER_PIPE);
+      printf("File check failed: %s is missing or inaccessible.\n", VIDEO_PLAYER_PIPE);
+   }
    if( access( VIDEO_PLAYER_OFFLINE, R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " "); strcat(szFilesMissing, VIDEO_PLAYER_OFFLINE); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ");
+      strcat(szFilesMissing, VIDEO_PLAYER_OFFLINE);
+      printf("File check failed: %s is missing or inaccessible.\n", VIDEO_PLAYER_OFFLINE);
+   }
    #endif
 
    if( access( "ruby_rt_vehicle", R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " ruby_rt_vehicle"); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ruby_rt_vehicle");
+      printf("File check failed: ruby_rt_vehicle is missing or inaccessible.\n");
+   }
    if( access( "ruby_tx_telemetry", R_OK ) == -1 )
-      { failed = true; strcat(szFilesMissing, " ruby_tx_telemetry"); }
+   {
+      failed = true;
+      strcat(szFilesMissing, " ruby_tx_telemetry");
+      printf("File check failed: ruby_tx_telemetry is missing or inaccessible.\n");
+   }
 
    #ifdef HW_PLATFORM_RASPBERRY
    if ( access( "/etc/modprobe.d/ath9k_hw.conf.org", R_OK ) == -1 )
    {
       hw_execute_bash_command("cp -rf /etc/modprobe.d/ath9k_hw.conf /etc/modprobe.d/ath9k_hw.conf.org", NULL);
       if ( access( "/etc/modprobe.d/ath9k_hw.conf.org", R_OK ) == -1 )
-         {failed = true; strcat(szFilesMissing, " Atheros_config");}
+      {
+         failed = true;
+         strcat(szFilesMissing, " Atheros_config");
+         printf("File check failed: Atheros config is missing or inaccessible.\n");
+      }
    }
 
    if ( access( "/etc/modprobe.d/rtl8812au.conf.org", R_OK ) == -1 )
    {
       hw_execute_bash_command("cp -rf /etc/modprobe.d/rtl8812au.conf /etc/modprobe.d/rtl8812au.conf.org", NULL);
       if ( access( "/etc/modprobe.d/rtl8812au.conf.org", R_OK ) == -1 )
-         {failed = true; strcat(szFilesMissing, " RTL_config");}
+      {
+         failed = true;
+         strcat(szFilesMissing, " RTL_config");
+         printf("File check failed: RTL config is missing or inaccessible.\n");
+      }
    }
-   
+
    if ( access( "/etc/modprobe.d/rtl88XXau.conf.org", R_OK ) == -1 )
    {
       hw_execute_bash_command("cp -rf /etc/modprobe.d/rtl88XXau.conf /etc/modprobe.d/rtl88XXau.conf.org", NULL);
       if ( access( "/etc/modprobe.d/rtl88XXau.conf.org", R_OK ) == -1 )
-         {failed = true; strcat(szFilesMissing, " RTL_XX_config");}
+      {
+         failed = true;
+         strcat(szFilesMissing, " RTL_XX_config");
+         printf("File check failed: RTL_XX config is missing or inaccessible.\n");
+      }
    }
    #endif
 
    if ( failed )
-      printf("Ruby: Checked files consistency: failed.\n");
+   {
+      printf("Ruby: Checked files consistency: failed. Missing files:%s\n", szFilesMissing);
+   }
    else
+   {
       printf("Ruby: Checked files consistency: ok.\n");
+   }
 }
 
 
