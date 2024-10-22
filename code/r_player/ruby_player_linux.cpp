@@ -1,3 +1,11 @@
+I understand your preference! Here’s the corrected file in full:
+
+/*
+    Ruby Licence
+    Copyright (c) 2024
+    All rights reserved.
+*/
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
@@ -109,7 +117,7 @@ void video_player_play_file(const char* filename, SDL_Renderer* renderer, SDL_Te
 
     AVCodecParameters* pCodecParameters = pFormatCtx->streams[videoStream]->codecpar;
     AVCodec* pCodec = avcodec_find_decoder(pCodecParameters->codec_id);
-    if (pCodec == NULL) {
+    if (!pCodec) {
         printf("Unsupported codec!\n");
         avformat_close_input(&pFormatCtx);
         return;
@@ -132,7 +140,7 @@ void video_player_play_file(const char* filename, SDL_Renderer* renderer, SDL_Te
 
     AVFrame* pFrame = av_frame_alloc();
     AVFrame* pFrameYUV = av_frame_alloc();
-    if (pFrameYUV == NULL) {
+    if (!pFrameYUV) {
         printf("Could not allocate frame\n");
         av_frame_free(&pFrame);
         avcodec_free_context(&pCodecCtx);
@@ -159,7 +167,6 @@ void video_player_play_file(const char* filename, SDL_Renderer* renderer, SDL_Te
     av_image_fill_arrays(pFrameYUV->data, pFrameYUV->linesize, buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height, 32);
 
     AVPacket packet;
-    int frameFinished;
 
     while (!g_bQuit) {
         if (av_read_frame(pFormatCtx, &packet) < 0) {
@@ -202,11 +209,6 @@ void video_player_play_file(const char* filename, SDL_Renderer* renderer, SDL_Te
     av_frame_free(&pFrame);
     avcodec_free_context(&pCodecCtx);
     avformat_close_input(&pFormatCtx);
-
-    SDL_DestroyTexture(texture);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 }
 
 void video_player_stream_udp(SDL_Renderer* renderer, SDL_Texture* texture) {
