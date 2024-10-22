@@ -49,7 +49,7 @@
 #include "../radio/radioflags.h"
 #include "../base/ruby_ipc.h"
 
-#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_LINUX_AMD64)
 #include "../base/ctrl_settings.h"
 #include "../base/controller_utils.h"
 #endif
@@ -235,7 +235,7 @@ void _check_files()
    szFilesMissing[0] = 0;
    bool failed = false;
 
-   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_LINUX_AMD64)
    if( access( "ruby_controller", R_OK ) == -1 )
       { failed = true; strcat(szFilesMissing, " ruby_controller"); }
    if( access( "ruby_rt_station", R_OK ) == -1 )
@@ -838,7 +838,7 @@ int main(int argc, char *argv[])
 
    log_line("Files are ok, checking processes and init log files...");
 
-   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_LINUX_AMD64)
    _check_files();
    #endif
 
@@ -1465,7 +1465,7 @@ int main(int argc, char *argv[])
    }
    else
    {
-      #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+      #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_LINUX_AMD64)
 
       u32 uControllerId = controller_utils_getControllerId();
       log_line("Controller UID: %u", uControllerId);

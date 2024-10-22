@@ -37,7 +37,7 @@
 #include "controller_utils.h"
 #include "ctrl_interfaces.h"
 
-#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)  || defined(HW_PLATFORM_LINUX_AMD64)
 
 u32 controller_utils_getControllerId()
 {

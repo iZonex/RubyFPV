@@ -37,7 +37,7 @@
 #include "hw_procs.h"
 #include "flags.h"
 
-#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
+#if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3) || defined(HW_PLATFORM_LINUX_AMD64)
 
 ControllerSettings s_CtrlSettings;
 int s_CtrlSettingsLoaded = 0;

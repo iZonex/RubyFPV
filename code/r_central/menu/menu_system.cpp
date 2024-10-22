@@ -161,23 +161,12 @@ void MenuSystem::onReturnFromChild(int iChildMenuId, int returnValue)
    if ( 1 == iChildMenuId/1000 )
    {
       onEventReboot();
-      #if defined(HW_PLATFORM_RASPBERRY)
-      hw_execute_bash_command("rm -rf /home/pi/ruby/logs", NULL);
-      hw_execute_bash_command("rm -rf /home/pi/ruby/media", NULL);
-      hw_execute_bash_command("rm -rf /home/pi/ruby/config", NULL);
-      hw_execute_bash_command("rm -rf /home/pi/ruby/tmp", NULL);
-      hw_execute_bash_command("mkdir -p config", NULL);
-      hw_execute_bash_command("touch /home/pi/ruby/config/firstboot.txt", NULL);
-      #endif
-
-      #if defined(HW_PLATFORM_RADXA_ZERO3)
-      hw_execute_bash_command("rm -rf /home/radxa/ruby/logs", NULL);
-      hw_execute_bash_command("rm -rf /home/radxa/ruby/media", NULL);
-      hw_execute_bash_command("rm -rf /home/radxa/ruby/config", NULL);
-      hw_execute_bash_command("rm -rf /home/radxa/ruby/tmp", NULL);
-      hw_execute_bash_command("mkdir -p config", NULL);
-      hw_execute_bash_command("touch /home/radxa/ruby/config/firstboot.txt", NULL);
-      #endif
+      hw_execute_bash_command("rm -rf " FOLDER_LOGS, NULL);
+      hw_execute_bash_command("rm -rf " FOLDER_MEDIA, NULL);
+      hw_execute_bash_command("rm -rf " FOLDER_CONFIG, NULL);
+      hw_execute_bash_command("rm -rf " FOLDER_TMP, NULL);
+      hw_execute_bash_command("mkdir -p " FOLDER_CONFIG, NULL);
+      hw_execute_bash_command("touch " FOLDER_CONFIG "firstboot.txt", NULL);
 
       char szBuff[128];
       sprintf(szBuff, "touch %s%s", FOLDER_CONFIG, LOG_USE_PROCESS);
