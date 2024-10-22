@@ -1206,6 +1206,9 @@ int main(int argc, char *argv[])
 #ifdef HW_PLATFORM_RADXA_ZERO3
    log_line("Running on Radxa Zero 3 hardware");
 #endif
+#ifdef HW_PLATFORM_LINUX_AMD64
+   log_line("Running on Linux hardware");
+#endif
 #ifdef HW_PLATFORM_OPENIPC_CAMERA
    log_line("Running on OpenIPC hardware");
 #endif

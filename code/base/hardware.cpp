@@ -198,7 +198,7 @@ void _hardware_detectSystemType()
    else
       log_line("Hardware: Detected system as controller.");
 
-   hw_execute_bash_command_raw("cat /proc/device-tree/model", szBuff);
+   get_cpu_info(szBuff);
    log_line("[Hardware] Board description string: %s", szBuff);
 
    s_uHardwareBoardType = hardware_getOnlyBoardType();
@@ -418,6 +418,21 @@ void hardware_reboot()
    {
       hardware_sleep_ms(100);
    }
+}
+
+void get_cpu_info(char* szBuffer, size_t bufferSize) {
+    char szOutput[256] = {0};
+
+    hw_execute_bash_command_raw("uname -m", szOutput, sizeof(szOutput));
+
+    if (strcmp(szOutput, "x86_64") == 0 || strcmp(szOutput, "i686") == 0) {
+        hw_execute_bash_command_raw("lscpu | grep 'Model name' | head -n 1 | awk -F: '{print $2}' | sed 's/^ *//g'", szOutput, sizeof(szOutput));
+    } else {
+        hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput, sizeof(szOutput));
+    }
+    strcat(szBuffer, "CPU: ");
+    strcat(szBuffer, szOutput);
+    strcat(szBuffer, "#");
 }
 
 

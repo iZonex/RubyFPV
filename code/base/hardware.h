@@ -88,6 +88,8 @@ void _hardware_load_system_type();
 
 void hardware_reboot();
 
+void get_cpu_info(char* szBuffer, size_t bufferSize);
+
 void hardware_release();
 void hardware_loop();
 void hardware_swap_buttons(int swap);
@@ -95,6 +97,8 @@ void hardware_swap_buttons(int swap);
 u32 hardware_getOnlyBoardType();
 u32 hardware_getBoardType();
 u32 hardware_get_base_ruby_version();
+
+
 
 int hardware_board_is_raspberry(u32 uBoardType);
 int hardware_board_is_openipc(u32 uBoardType);
