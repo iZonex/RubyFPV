@@ -76,6 +76,9 @@
 #include "../renderer/drm_core.h"
 #include "../renderer/render_engine_cairo.h"
 #endif
+#if defined (HW_PLATFORM_LINUX_AMD64)
+#include "../renderer/render_engine_sdl2.h"
+#endif
 
 #include "../common/string_utils.h"
 #include "../common/relay_utils.h"
