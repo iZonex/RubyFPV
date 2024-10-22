@@ -1,11 +1,3 @@
-I understand your preference! Here’s the corrected file in full:
-
-/*
-    Ruby Licence
-    Copyright (c) 2024
-    All rights reserved.
-*/
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
