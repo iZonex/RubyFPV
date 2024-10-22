@@ -146,9 +146,9 @@
 #define FILE_FORCE_ROUTER "/var/lib/ruby/updates/forcerouter"
 #define FILE_FORCE_RESET "/var/lib/ruby/updates/forcereset"
 
-#define VIDEO_PLAYER_PIPE "/var/run/ruby_player_linux"
-#define VIDEO_PLAYER_STDIN "/var/run/ruby_player_linux"
-#define VIDEO_PLAYER_OFFLINE "/var/run/ruby_player_linux"
+#define VIDEO_PLAYER_PIPE "ruby_player_linux"
+#define VIDEO_PLAYER_STDIN "ruby_player_linux"
+#define VIDEO_PLAYER_OFFLINE "ruby_player_linux"
 
 #endif
 
