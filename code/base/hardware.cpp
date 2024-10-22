@@ -425,6 +425,10 @@ void get_cpu_info(char* szBuffer, size_t bufferSize) {
 
    hw_execute_bash_command_raw("uname -m", szOutput);
 
+   szOutput[strcspn(szOutput, "\n")] = 0;
+
+   log_line("CPU: %s", szOutput);
+
    if (strcmp(szOutput, "x86_64") == 0 || strcmp(szOutput, "i686") == 0) {
       hw_execute_bash_command_raw("lscpu | grep 'Model name' | head -n 1 | awk -F: '{print $2}' | sed 's/^ *//g'", szOutput);
    } else {
