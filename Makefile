@@ -33,8 +33,11 @@ else ifeq ($(RUBY_BUILD_ENV),linux-amd64)
 LDFLAGS_CENTRAL := -L/usr/lib -lpthread -lrt -lm
 LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
 
+SDL2_CFLAGS := $(shell pkg-config --cflags sdl2 SDL2_image)
+SDL2_LIBS := $(shell pkg-config --libs sdl2 SDL2_image)
+
 LDFLAGS_RENDERER := -L/usr/lib -lGLESv2 -lEGL -lfreetype -lpng -ljpeg -lSDL2 -lSDL2_image
-CFLAGS_RENDERER := -I/usr/include/libdrm -I/usr/include/SDL2
+CFLAGS_RENDERER := 	-I/usr/include/SDL2
 _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections 
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_LINUX_AMD64
 _CPPFLAGS := $(_CPPFLAGS) -DRUBY_BUILD_HW_PLATFORM_LINUX_AMD64
@@ -212,7 +215,7 @@ vehicle: ruby_start ruby_utils ruby_tx_telemetry ruby_rt_vehicle
 ifeq ($(RUBY_BUILD_ENV),radxa)
 station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_radxa
 else
-station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry
+station: ruby_start ruby_utils ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_linux
 endif
 
 ruby_central: $(FOLDER_CENTRAL)/ruby_central.o $(MODULE_BASE) $(MODULE_MODELS) $(MODULE_COMMON) $(MODULE_BASE2) $(CENTRAL_MENU_ITEMS_ALL) $(CENTRAL_MENU_ALL1) $(CENTRAL_RENDER_CODE) $(CENTRAL_MENU_ALL2) $(CENTRAL_MENU_ALL3) $(CENTRAL_MENU_ALL4) $(CENTRAL_MENU_ALL5)  $(CENTRAL_MENU_RC)  $(CENTRAL_MENU_RADIO) $(CENTRAL_POPUP_ALL) $(CENTRAL_RENDER_ALL) $(CENTRAL_OSD_ALL) $(CENTRAL_ALL) $(CENTRAL_RADIO) $(FOLDER_BASE)/shared_mem_controller_only.o $(FOLDER_BASE)/hdmi.o $(FOLDER_COMMON)/favorites.o $(FOLDER_BASE)/plugins_settings.o \
@@ -291,6 +294,9 @@ ruby_plugin_gauge_heading: $(FOLDER_PLUGINS_OSD)/ruby_plugin_gauge_heading.o osd
 ruby_player_radxa:code/r_player/ruby_player_radxa.o code/r_player/mpp_core.o $(FOLDER_BASE)/hdmi.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
 	$(CXX) $(_CFLAGS) $(CFLAGS_RENDERER) -o $@ $^ $(_LDFLAGS) $(LDFLAGS_RENDERER) $(LDFLAGS_CENTRAL) $(LDFLAGS_CENTRAL2) -ldl -lc -lrockchip_mpp
 
+ruby_player_linux: code/r_player/ruby_player_linux.o code/r_player/render_engine_sdl2.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
+	$(CXX) $(_CFLAGS) $(CFLAGS_RENDERER) -o $@ $^ $(_LDFLAGS) $(LDFLAGS_RENDERER) $(LDFLAGS_CENTRAL) $(LDFLAGS_CENTRAL2) -ldl -lc $(LDFLAGS_SDL2)
+
 ifeq ($(RUBY_BUILD_ENV),radxa)
 	tests: test_drm test_log test_port_rx test_port_tx test_link
 
@@ -350,7 +356,7 @@ test_link:$(FOLDER_TESTS)/test_link.o $(MODULE_BASE) $(MODULE_BASE2) $(MODULE_CO
 clean:
 	rm -rf ruby_start ruby_i2c ruby_logger ruby_initdhcp ruby_sik_config ruby_alive ruby_video_proc ruby_update ruby_update_worker \
         ruby_tx_telemetry ruby_rt_vehicle \
-          test_* ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_radxa \
+          test_* ruby_controller ruby_rt_station ruby_tx_rc ruby_rx_telemetry ruby_player_radxa ruby_player_linux \
           ruby_central $(FOLDER_CENTRAL)/ruby_central test_log $(FOLDER_TESTS)/test_log ruby_plugin* \
           $(FOLDER_VEHICLE)/ruby_tx_telemetry $(FOLDER_VEHICLE)/ruby_rt_vehicle \
           $(FOLDER_STATION)/ruby_controller $(FOLDER_STATION)/ruby_rt_station $(FOLDER_STATION)/ruby_tx_rc $(FOLDER_STATION)/ruby_rx_telemetry \
