@@ -427,7 +427,7 @@ void get_cpu_info(char* szBuffer, size_t bufferSize) {
    hw_execute_bash_command_raw("uname -m", szOutput);
 
    if (strcmp(szOutput, "x86_64") == 0 || strcmp(szOutput, "i686") == 0) {
-      hw_execute_bash_command_raw("lscpu | grep 'Model name' | head -n 1 | awk -F: '{print $2}' | sed 's/^ *//g'", szOutput, sizeof(szOutput));
+      hw_execute_bash_command_raw("lscpu | grep 'Model name' | head -n 1 | awk -F: '{print $2}' | sed 's/^ *//g'", szOutput);
    } else {
       hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput);
    }
