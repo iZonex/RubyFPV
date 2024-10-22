@@ -33,6 +33,9 @@ else ifeq ($(RUBY_BUILD_ENV),linux-amd64)
 LDFLAGS_CENTRAL := -L/usr/lib -lpthread -lrt -lm
 LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
 
+FFmpeg_CFLAGS := -I/usr/include
+FFmpeg_LIBS := -lavcodec -lavformat -lavutil -lswscale
+
 SDL2_CFLAGS := $(shell pkg-config --cflags sdl2 SDL2_image)
 SDL2_LIBS := $(shell pkg-config --libs sdl2 SDL2_image)
 

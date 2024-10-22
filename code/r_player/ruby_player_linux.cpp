@@ -10,11 +10,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <string.h>
 
 extern "C" {
     #include <libavcodec/avcodec.h>
     #include <libavformat/avformat.h>
     #include <libswscale/swscale.h>
+    #include <libavutil/imgutils.h>
 }
 
 #define VIDEO_BUFFER_SIZE 4096
@@ -32,6 +34,16 @@ int g_iCustomRefresh = 60;
 void handle_sigint(int sig) {
     printf("Caught signal %d\n", sig);
     g_bQuit = true;
+}
+
+void video_player_render_frame(SDL_Renderer* renderer, SDL_Texture* texture, uint8_t* frame_data, int pitch) {
+    SDL_UpdateYUVTexture(texture, NULL,
+                         frame_data, pitch,
+                         frame_data + pitch * g_iCustomHeight, pitch / 2,
+                         frame_data + pitch * g_iCustomHeight + (pitch / 2) * (g_iCustomHeight / 2), pitch / 2);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
 }
 
 int video_player_init(SDL_Window** window, SDL_Renderer** renderer, SDL_Texture** texture, int width, int height) {
@@ -67,6 +79,175 @@ int video_player_init(SDL_Window** window, SDL_Renderer** renderer, SDL_Texture*
     return 0;
 }
 
+void video_player_play_file(const char* filename, SDL_Renderer* renderer, SDL_Texture* texture) {
+    AVFormatContext* pFormatCtx = nullptr;
+
+    if (avformat_open_input(&pFormatCtx, filename, NULL, NULL) != 0) {
+        printf("Couldn't open file: %s\n", filename);
+        return;
+    }
+
+    if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
+        printf("Couldn't find stream information\n");
+        avformat_close_input(&pFormatCtx);
+        return;
+    }
+
+    int videoStream = -1;
+    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
+        if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
+            videoStream = i;
+            break;
+        }
+    }
+
+    if (videoStream == -1) {
+        printf("Couldn't find a video stream\n");
+        avformat_close_input(&pFormatCtx);
+        return;
+    }
+
+    AVCodecParameters* pCodecParameters = pFormatCtx->streams[videoStream]->codecpar;
+    AVCodec* pCodec = avcodec_find_decoder(pCodecParameters->codec_id);
+    if (pCodec == NULL) {
+        printf("Unsupported codec!\n");
+        avformat_close_input(&pFormatCtx);
+        return;
+    }
+
+    AVCodecContext* pCodecCtx = avcodec_alloc_context3(pCodec);
+    if (avcodec_parameters_to_context(pCodecCtx, pCodecParameters) < 0) {
+        printf("Couldn't copy codec context\n");
+        avcodec_free_context(&pCodecCtx);
+        avformat_close_input(&pFormatCtx);
+        return;
+    }
+
+    if (avcodec_open2(pCodecCtx, pCodec, NULL) < 0) {
+        printf("Could not open codec.\n");
+        avcodec_free_context(&pCodecCtx);
+        avformat_close_input(&pFormatCtx);
+        return;
+    }
+
+    AVFrame* pFrame = av_frame_alloc();
+    AVFrame* pFrameYUV = av_frame_alloc();
+    if (pFrameYUV == NULL) {
+        printf("Could not allocate frame\n");
+        av_frame_free(&pFrame);
+        avcodec_free_context(&pCodecCtx);
+        avformat_close_input(&pFormatCtx);
+        return;
+    }
+
+    int numBytes = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height, 32);
+    uint8_t* buffer = (uint8_t*)av_malloc(numBytes * sizeof(uint8_t));
+
+    struct SwsContext* sws_ctx = sws_getContext(
+        pCodecCtx->width,
+        pCodecCtx->height,
+        pCodecCtx->pix_fmt,
+        pCodecCtx->width,
+        pCodecCtx->height,
+        AV_PIX_FMT_YUV420P,
+        SWS_BILINEAR,
+        NULL,
+        NULL,
+        NULL
+    );
+
+    av_image_fill_arrays(pFrameYUV->data, pFrameYUV->linesize, buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height, 32);
+
+    AVPacket packet;
+    int frameFinished;
+
+    while (!g_bQuit) {
+        if (av_read_frame(pFormatCtx, &packet) < 0) {
+            break;
+        }
+
+        if (packet.stream_index == videoStream) {
+            if (avcodec_send_packet(pCodecCtx, &packet) == 0) {
+                while (avcodec_receive_frame(pCodecCtx, pFrame) == 0) {
+                    sws_scale(
+                        sws_ctx,
+                        (uint8_t const* const*)pFrame->data,
+                        pFrame->linesize,
+                        0,
+                        pCodecCtx->height,
+                        pFrameYUV->data,
+                        pFrameYUV->linesize
+                    );
+
+                    video_player_render_frame(renderer, texture, buffer, pFrameYUV->linesize[0]);
+
+                    SDL_Event event;
+                    while (SDL_PollEvent(&event)) {
+                        if (event.type == SDL_QUIT) {
+                            g_bQuit = true;
+                        }
+                    }
+
+                    SDL_Delay(33);
+                }
+            }
+        }
+
+        av_packet_unref(&packet);
+    }
+
+    sws_freeContext(sws_ctx);
+    av_free(buffer);
+    av_frame_free(&pFrameYUV);
+    av_frame_free(&pFrame);
+    avcodec_free_context(&pCodecCtx);
+    avformat_close_input(&pFormatCtx);
+
+    SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
+void video_player_stream_udp(SDL_Renderer* renderer, SDL_Texture* texture) {
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0) {
+        printf("Failed to create UDP socket\n");
+        return;
+    }
+
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_port = htons(12345);
+
+    if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+        printf("Failed to bind UDP socket\n");
+        close(sock);
+        return;
+    }
+
+    uint8_t buffer[VIDEO_BUFFER_SIZE];
+    while (!g_bQuit) {
+        socklen_t addr_len = sizeof(addr);
+        int len = recvfrom(sock, buffer, VIDEO_BUFFER_SIZE, 0, (struct sockaddr*)&addr, &addr_len);
+        if (len > 0) {
+            video_player_render_frame(renderer, texture, buffer, VIDEO_BUFFER_SIZE / 2);
+        }
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                g_bQuit = true;
+            }
+        }
+        SDL_Delay(33);
+    }
+
+    close(sock);
+}
+
 int main(int argc, char* argv[]) {
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
@@ -97,116 +278,14 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    av_register_all();
-    avformat_network_init();
-
-    AVFormatContext* pFormatCtx = avformat_alloc_context();
-    if (avformat_open_input(&pFormatCtx, g_szPlayFileName, NULL, NULL) != 0) {
-        printf("Couldn't open file: %s\n", g_szPlayFileName);
-        return -1;
+    if (g_bPlayFile) {
+        video_player_play_file(g_szPlayFileName, renderer, texture);
+    } else if (g_bPlayStreamUDP) {
+        video_player_stream_udp(renderer, texture);
+    } else {
+        printf("No valid mode selected.\n");
+        g_bQuit = true;
     }
-
-    if (avformat_find_stream_info(pFormatCtx, NULL) < 0) {
-        printf("Couldn't find stream information\n");
-        return -1;
-    }
-
-    int videoStream = -1;
-    for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++) {
-        if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-            videoStream = i;
-            break;
-        }
-    }
-
-    if (videoStream == -1) {
-        printf("Couldn't find a video stream\n");
-        return -1;
-    }
-
-    AVCodecParameters* pCodecParameters = pFormatCtx->streams[videoStream]->codecpar;
-    AVCodec* pCodec = avcodec_find_decoder(pCodecParameters->codec_id);
-    if (pCodec == NULL) {
-        printf("Unsupported codec!\n");
-        return -1;
-    }
-
-    AVCodecContext* pCodecCtx = avcodec_alloc_context3(pCodec);
-    if (avcodec_parameters_to_context(pCodecCtx, pCodecParameters) < 0) {
-        printf("Couldn't copy codec context\n");
-        return -1;
-    }
-
-    if (avcodec_open2(pCodecCtx, pCodec, NULL) < 0) {
-        printf("Could not open codec.\n");
-        return -1;
-    }
-
-    AVFrame* pFrame = av_frame_alloc();
-    AVPacket packet;
-
-    struct SwsContext* sws_ctx = sws_getContext(
-        pCodecCtx->width,
-        pCodecCtx->height,
-        pCodecCtx->pix_fmt,
-        pCodecCtx->width,
-        pCodecCtx->height,
-        AV_PIX_FMT_YUV420P,
-        SWS_BILINEAR,
-        NULL,
-        NULL,
-        NULL
-    );
-
-    uint8_t* yuv_buffer = (uint8_t*)malloc(3 * pCodecCtx->width * pCodecCtx->height);
-    AVFrame* pFrameYUV = av_frame_alloc();
-    pFrameYUV->data[0] = yuv_buffer;
-    pFrameYUV->data[1] = pFrameYUV->data[0] + pCodecCtx->width * pCodecCtx->height;
-    pFrameYUV->data[2] = pFrameYUV->data[1] + (pCodecCtx->width * pCodecCtx->height) / 4;
-    pFrameYUV->linesize[0] = pCodecCtx->width;
-    pFrameYUV->linesize[1] = pCodecCtx->width / 2;
-    pFrameYUV->linesize[2] = pCodecCtx->width / 2;
-
-    while (!g_bQuit) {
-
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                g_bQuit = true;
-            }
-        }
-
-        if (av_read_frame(pFormatCtx, &packet) < 0)
-            break;
-
-        if (packet.stream_index == videoStream) {
-            if (avcodec_send_packet(pCodecCtx, &packet) == 0) {
-                while (avcodec_receive_frame(pCodecCtx, pFrame) == 0) {
-                    sws_scale(
-                        sws_ctx,
-                        (uint8_t const* const*)pFrame->data,
-                        pFrame->linesize,
-                        0,
-                        pCodecCtx->height,
-                        pFrameYUV->data,
-                        pFrameYUV->linesize
-                    );
-
-                    video_player_render_frame(renderer, texture, yuv_buffer, pFrameYUV->linesize[0]);
-                    SDL_Delay(33);
-                }
-            }
-        }
-
-        av_packet_unref(&packet);
-    }
-
-    sws_freeContext(sws_ctx);
-    av_frame_free(&pFrameYUV);
-    free(yuv_buffer);
-    av_frame_free(&pFrame);
-    avcodec_free_context(&pCodecCtx);
-    avformat_close_input(&pFormatCtx);
 
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
