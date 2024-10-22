@@ -421,18 +421,19 @@ void hardware_reboot()
 }
 
 void get_cpu_info(char* szBuffer, size_t bufferSize) {
-    char szOutput[256] = {0};
+   char szOutput[256];
 
-    hw_execute_bash_command_raw("uname -m", szOutput, sizeof(szOutput));
+   hw_execute_bash_command_raw("cat /proc/device-tree/model", szBuff);
+   hw_execute_bash_command_raw("uname -m", szOutput);
 
-    if (strcmp(szOutput, "x86_64") == 0 || strcmp(szOutput, "i686") == 0) {
-        hw_execute_bash_command_raw("lscpu | grep 'Model name' | head -n 1 | awk -F: '{print $2}' | sed 's/^ *//g'", szOutput, sizeof(szOutput));
-    } else {
-        hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput, sizeof(szOutput));
-    }
-    strcat(szBuffer, "CPU: ");
-    strcat(szBuffer, szOutput);
-    strcat(szBuffer, "#");
+   if (strcmp(szOutput, "x86_64") == 0 || strcmp(szOutput, "i686") == 0) {
+      hw_execute_bash_command_raw("lscpu | grep 'Model name' | head -n 1 | awk -F: '{print $2}' | sed 's/^ *//g'", szOutput, sizeof(szOutput));
+   } else {
+      hw_execute_bash_command_raw("cat /proc/device-tree/model", szOutput);
+   }
+   strcat(szBuffer, "CPU: ");
+   strcat(szBuffer, szOutput);
+   strcat(szBuffer, "#");
 }
 
 
