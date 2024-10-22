@@ -1411,6 +1411,7 @@ int main(int argc, char *argv[])
 
    if ( s_isVehicle )
    {
+      log_line("Loading vehicle model...");
       strcpy(szFile, FOLDER_CONFIG);
       strcat(szFile, FILE_CONFIG_CURRENT_VEHICLE_MODEL);
       log_line("Loading vehicle model from file: %s", szFile);
