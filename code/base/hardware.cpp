@@ -198,7 +198,7 @@ void _hardware_detectSystemType()
    else
       log_line("Hardware: Detected system as controller.");
 
-   get_cpu_info(szBuff);
+   get_cpu_info(szBuff, 256);
    log_line("[Hardware] Board description string: %s", szBuff);
 
    s_uHardwareBoardType = hardware_getOnlyBoardType();
