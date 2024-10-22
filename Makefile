@@ -36,7 +36,7 @@ LDFLAGS_CENTRAL2 := -lpthread -lrt -lm
 SDL2_CFLAGS := $(shell pkg-config --cflags sdl2 SDL2_image)
 SDL2_LIBS := $(shell pkg-config --libs sdl2 SDL2_image)
 
-LDFLAGS_RENDERER := -L/usr/lib -lGLESv2 -lEGL -lfreetype -lpng -ljpeg -lSDL2 -lSDL2_image
+LDFLAGS_RENDERER := -L/usr/lib -lGLESv2 -lEGL -lfreetype -lpng -ljpeg -lSDL2 -lSDL2_image -lavcodec -lavformat -lavutil -lswscale -lm
 CFLAGS_RENDERER := 	-I/usr/include/SDL2
 _LDFLAGS := $(LDFLAGS) -lrt -lpcap -lpthread -Wl,--gc-sections 
 _CFLAGS := $(_CFLAGS) -DRUBY_BUILD_HW_PLATFORM_LINUX_AMD64
