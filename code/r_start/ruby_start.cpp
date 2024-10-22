@@ -899,10 +899,13 @@ int main(int argc, char *argv[])
    log_line("Ruby Start on verison %d.%d (b %d)", SYSTEM_SW_VERSION_MAJOR, SYSTEM_SW_VERSION_MINOR/10, SYSTEM_SW_BUILD_NUMBER);
    printf("Ruby Start on verison %d.%d (b %d)\n", SYSTEM_SW_VERSION_MAJOR, SYSTEM_SW_VERSION_MINOR/10, SYSTEM_SW_BUILD_NUMBER);
    fflush(stdout);
+   #if defined(HW_PLATFORM_RASPBERRY) || defined(HW_PLATFORM_RADXA_ZERO3)
    u32 uBaseVersion = hardware_get_base_ruby_version();
    log_line("Ruby base version is %d.%d", (uBaseVersion >> 8) & 0xFF, uBaseVersion & 0xFF);
    printf("Ruby base version is %d.%d\n", (uBaseVersion >> 8) & 0xFF, uBaseVersion & 0xFF);
    fflush(stdout);
+   #endif
+   
    char szOutput[4096];
    szOutput[0] = 0;
 
