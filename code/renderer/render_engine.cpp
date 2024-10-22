@@ -42,6 +42,10 @@
 #include "render_engine_cairo.h"
 #endif
 
+#if defined (HW_PLATFORM_LINUX_AMD64)
+#include "render_engine_sdl2.h"
+#endif
+
 #include "../base/base.h"
 #include "../base/hardware.h"
 
@@ -60,6 +64,10 @@ RenderEngine* render_init_engine()
       #if defined (HW_PLATFORM_RADXA_ZERO3)
       s_bRenderEngineSupportsRawFonts = true;
       s_pRenderEngine = new RenderEngineCairo();
+      #endif
+      #if defined (HW_PLATFORM_LINUX_AMD64)
+      s_bRenderEngineSupportsRawFonts = true;
+      s_pRenderEngine = new RenderEngineSDL2();
       #endif
 
       if (NULL != s_pRenderEngine )
