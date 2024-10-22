@@ -297,7 +297,7 @@ ruby_plugin_gauge_heading: $(FOLDER_PLUGINS_OSD)/ruby_plugin_gauge_heading.o osd
 ruby_player_radxa:code/r_player/ruby_player_radxa.o code/r_player/mpp_core.o $(FOLDER_BASE)/hdmi.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
 	$(CXX) $(_CFLAGS) $(CFLAGS_RENDERER) -o $@ $^ $(_LDFLAGS) $(LDFLAGS_RENDERER) $(LDFLAGS_CENTRAL) $(LDFLAGS_CENTRAL2) -ldl -lc -lrockchip_mpp
 
-ruby_player_linux: code/r_player/ruby_player_linux.o code/r_player/render_engine_sdl2.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
+ruby_player_linux: code/r_player/ruby_player_linux.o code/renderer/render_engine_sdl2.o $(CENTRAL_RENDER_CODE) $(MODULE_MINIMUM_BASE)
 	$(CXX) $(_CFLAGS) $(CFLAGS_RENDERER) -o $@ $^ $(_LDFLAGS) $(LDFLAGS_RENDERER) $(LDFLAGS_CENTRAL) $(LDFLAGS_CENTRAL2) -ldl -lc $(LDFLAGS_SDL2)
 
 ifeq ($(RUBY_BUILD_ENV),radxa)
