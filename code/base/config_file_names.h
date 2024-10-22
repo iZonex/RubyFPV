@@ -56,6 +56,7 @@
 #define FILE_CONFIG_CONTROLLER_OSD_WIDGETS "osd_widgets.cfg"
 #define FILE_CONFIG_CONTROLLER_FAVORITES_VEHICLES "favorites.cfg"
 
+#define FOLDER_TMP "/tmp/"
 #define FILE_TEMP_USB_TETHERING_DEVICE "usb_tethering"
 #define FILE_TEMP_VIDEO_MEM_FILE "tmpVideo.h26x"
 #define FILE_TEMP_VIDEO_FILE "tmpVideo.h26x"
