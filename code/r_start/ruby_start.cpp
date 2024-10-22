@@ -905,7 +905,7 @@ int main(int argc, char *argv[])
    printf("Ruby base version is %d.%d\n", (uBaseVersion >> 8) & 0xFF, uBaseVersion & 0xFF);
    fflush(stdout);
    #endif
-   
+
    char szOutput[4096];
    szOutput[0] = 0;
 
@@ -1413,6 +1413,7 @@ int main(int argc, char *argv[])
    {
       strcpy(szFile, FOLDER_CONFIG);
       strcat(szFile, FILE_CONFIG_CURRENT_VEHICLE_MODEL);
+      log_line("Loading vehicle model from file: %s", szFile);
       if ( ! modelVehicle.loadFromFile(szFile, true) )
       {
          modelVehicle.resetToDefaults(true);
