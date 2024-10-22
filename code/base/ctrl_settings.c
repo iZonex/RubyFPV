@@ -184,7 +184,7 @@ int load_ControllerSettings()
    char szFile[128];
    strcpy(szFile, FOLDER_CONFIG);
    strcat(szFile, FILE_CONFIG_CONTROLLER_SETTINGS);
-   if (access(szFile, F_OK) != 0)
+   if ( access(szFile, R_OK) == -1 )
    {
       log_softerror_and_alarm("Failed to load controller settings from file: %s (missing file). Resetted controller settings to default.", szFile);
       reset_ControllerSettings();
@@ -193,6 +193,14 @@ int load_ControllerSettings()
    }
 
    FILE* fd = fopen(szFile, "r");
+
+   if ( NULL == fd )
+   {
+      log_softerror_and_alarm("Failed to load controller settings from file: %s (cannot open file). Resetted controller settings to default.", szFile);
+      reset_ControllerSettings();
+      save_ControllerSettings();
+      return 0;
+   }
 
    int iDummy = 0;
    int failed = 0;
