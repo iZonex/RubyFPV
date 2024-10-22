@@ -490,7 +490,7 @@ int hardware_i2c_load_device_settings()
    strcpy(szFile, FOLDER_CONFIG);
    strcat(szFile, FILE_CONFIG_HARDWARE_I2C_DEVICES);
    FILE* fd = fopen(szFile, "r");
-   if ( NULL == fd )
+   if (access(szFile, F_OK) != 0)
    {
       log_softerror_and_alarm("[Hardware]: Failed to load I2C devices settings from file: %s (missing file). Recreated the file.", szFile);
       hardware_i2c_save_device_settings();
